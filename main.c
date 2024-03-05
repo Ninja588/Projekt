@@ -7,17 +7,23 @@ void error_callback(int error, const char* description) {
     fprintf(stderr, "Error: %s\n", description);
 }
 
+void processInput(GLFWwindow *window)
+{
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, 1);
+}
+
 int main() {
-    // Initialize GLFW
+    // GLFW
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
         return -1;
     }
 
-    // Set GLFW error callback
+    // set GLFW error callback
     glfwSetErrorCallback(error_callback);
 
-    // Create a windowed mode window and its OpenGL context
+    // create a windowed mode window and its OpenGL context
     GLFWwindow* window = glfwCreateWindow(800, 600, "Guwno w dupie", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Failed to create GLFW window\n");
@@ -25,10 +31,10 @@ int main() {
         return -1;
     }
 
-    // Make the window's context current
+    // make the window's context current
     glfwMakeContextCurrent(window);
 
-    // Initialize GLEW
+    // glew
     GLenum err = glewInit();
     if (err != GLEW_OK) {
         fprintf(stderr, "Failed to initialize GLEW: %s\n", glewGetErrorString(err));
@@ -36,20 +42,24 @@ int main() {
         return -1;
     }
 
-    // Print OpenGL version
+    // opengl version
     printf("OpenGL version: %s\n", glGetString(GL_VERSION));
+    
 
-    // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
-        // Render here
+        // input
+        processInput(window);
+
+        // render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
         double time = glfwGetTime();
-        float angle = (float)time * 50.0f; // Adjust the speed of rotation by changing the multiplier
+        float angle = (float)time * 50.0f; // rotation speed
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
-        glRotatef(angle, 0.0f, 1.0f, 0.0f); // Rotate about the z-axis
+        glRotatef(angle, 0.0f, 1.0f, 0.0f); // rotate about the y-axis
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
@@ -81,14 +91,14 @@ int main() {
         glVertex3f(-0.5f,-0.5f, 0.5f);                  // Right Of Triangle (Left)
     glEnd();
 
-        // Swap front and back buffers
+        // swap front and back buffers
         glfwSwapBuffers(window);
 
-        // Poll for and process events
+        // poll for and process events
         glfwPollEvents();
     }
 
-    // Terminate GLFW
+    // terminate GLFW
     glfwTerminate();
     return 0;
 }
