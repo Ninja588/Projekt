@@ -64,7 +64,7 @@ int main() {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
 
-        glBegin(GL_TRIANGLES);                              // Start Drawing A Triangle
+    glBegin(GL_TRIANGLES);                              // Start Drawing A Triangle
         glColor3f(1.0f,0.0f,0.0f);                      // Red
         glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Front)
         glColor3f(0.0f,1.0f,0.0f);                      // Green
