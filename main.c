@@ -1,6 +1,7 @@
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
+#include <windows.h>
 
 // Function to handle errors
 void error_callback(int error, const char* description) {
@@ -11,6 +12,32 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, 1);
+    
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        double time = glfwGetTime();
+        float angle = (float)time * 50.0f; // rotation speed
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glRotatef(angle, 0.0f, 1.0f, 0.0f); // rotate about the y-axis
+    }
+    if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        double time = glfwGetTime();
+        float angle = (float)time * 50.0f; // rotation speed
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glRotatef(angle, 0.0f, -1.0f, 0.0f); // rotate about the y-axis
+    }
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        glTranslatef(0.0f, 0.1f, 0.0f); // ????
+    }
 }
 
 int main() {
@@ -53,44 +80,50 @@ int main() {
         // render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
+        /*
         double time = glfwGetTime();
         float angle = (float)time * 50.0f; // rotation speed
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glRotatef(angle, 0.0f, 1.0f, 0.0f); // rotate about the y-axis
+        */
 
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
 
+    // glBegin(GL_TRIANGLES);                              // Start Drawing A Triangle
+    //     glColor3f(1.0f,0.0f,0.0f);                      // Red
+    //     glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Front)
+    //     glColor3f(0.0f,1.0f,0.0f);                      // Green
+    //     glVertex3f(-0.5f,-0.5f, 0.5f);                  // Left Of Triangle (Front)
+    //     glColor3f(0.0f,0.0f,1.0f);                      // Blue
+    //     glVertex3f( 0.5f,-0.5f, 0.5f);                  // Right Of Triangle (Front)
+    //     glColor3f(1.0f,0.0f,0.0f);                      // Red
+    //     glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Right)
+    //     glColor3f(0.0f,0.0f,1.0f);                      // Blue
+    //     glVertex3f( 0.5f,-0.5f, 0.5f);                  // Left Of Triangle (Right)
+    //     glColor3f(0.0f,1.0f,0.0f);                      // Green
+    //     glVertex3f( 0.5f,-0.5f, -0.5f);                 // Right Of Triangle (Right)
+    //     glColor3f(1.0f,0.0f,0.0f);                      // Red
+    //     glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Back)
+    //     glColor3f(0.0f,1.0f,0.0f);                      // Green
+    //     glVertex3f( 0.5f,-0.5f, -0.5f);                 // Left Of Triangle (Back)
+    //     glColor3f(0.0f,0.0f,1.0f);                      // Blue
+    //     glVertex3f(-0.5f,-0.5f, -0.5f);                 // Right Of Triangle (Back)
+    //     glColor3f(1.0f,0.0f,0.0f);                      // Red
+    //     glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Left)
+    //     glColor3f(0.0f,0.0f,1.0f);                      // Blue
+    //     glVertex3f(-0.5f,-0.5f,-0.5f);                  // Left Of Triangle (Left)
+    //     glColor3f(0.0f,1.0f,0.0f);                      // Green
+    //     glVertex3f(-0.5f,-0.5f, 0.5f);                  // Right Of Triangle (Left)
+    // glEnd();
     glBegin(GL_TRIANGLES);                              // Start Drawing A Triangle
         glColor3f(1.0f,0.0f,0.0f);                      // Red
-        glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Front)
-        glColor3f(0.0f,1.0f,0.0f);                      // Green
-        glVertex3f(-0.5f,-0.5f, 0.5f);                  // Left Of Triangle (Front)
-        glColor3f(0.0f,0.0f,1.0f);                      // Blue
-        glVertex3f( 0.5f,-0.5f, 0.5f);                  // Right Of Triangle (Front)
-        glColor3f(1.0f,0.0f,0.0f);                      // Red
-        glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Right)
-        glColor3f(0.0f,0.0f,1.0f);                      // Blue
-        glVertex3f( 0.5f,-0.5f, 0.5f);                  // Left Of Triangle (Right)
-        glColor3f(0.0f,1.0f,0.0f);                      // Green
-        glVertex3f( 0.5f,-0.5f, -0.5f);                 // Right Of Triangle (Right)
-        glColor3f(1.0f,0.0f,0.0f);                      // Red
-        glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Back)
-        glColor3f(0.0f,1.0f,0.0f);                      // Green
-        glVertex3f( 0.5f,-0.5f, -0.5f);                 // Left Of Triangle (Back)
-        glColor3f(0.0f,0.0f,1.0f);                      // Blue
-        glVertex3f(-0.5f,-0.5f, -0.5f);                 // Right Of Triangle (Back)
-        glColor3f(1.0f,0.0f,0.0f);                      // Red
-        glVertex3f( 0.0f, 0.5f, 0.0f);                  // Top Of Triangle (Left)
-        glColor3f(0.0f,0.0f,1.0f);                      // Blue
-        glVertex3f(-0.5f,-0.5f,-0.5f);                  // Left Of Triangle (Left)
-        glColor3f(0.0f,1.0f,0.0f);                      // Green
-        glVertex3f(-0.5f,-0.5f, 0.5f);                  // Right Of Triangle (Left)
+        glVertex2f( 0.0f, 0.5f);
+        glVertex2f( -0.5f, 0.0f);
+        glVertex2f( 0.5f, 0.0f);                 
     glEnd();
-
         // swap front and back buffers
         glfwSwapBuffers(window);
 
