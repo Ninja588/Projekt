@@ -13,8 +13,8 @@ int emptySpaces;
 
 void updateEmptySpaces() {
     emptySpaces = 0;
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
             if (grid[i][j] == 0) {
                 emptySpaces++;
             }
@@ -27,8 +27,8 @@ void generateNewTile() {
     if (emptySpaces > 0) {
         int randomIndex = rand() % emptySpaces;
         int count = 0;
-        for (int i = 0; i < SIZE; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 if (grid[i][j] == 0) {
                     if (count == randomIndex) {
                         grid[i][j] = value;
@@ -43,8 +43,8 @@ void generateNewTile() {
 }
 
 void initializeGrid() {
-    for (int i = 0; i < SIZE; ++i) {
-        for (int j = 0; j < SIZE; ++j) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
             grid[i][j] = 0;
         }
     }
@@ -54,11 +54,11 @@ void initializeGrid() {
 }
 
 void moveTilesLeft() {
-    for (int i = 0; i < SIZE; ++i) {
+    for (int i = 0; i < SIZE; i++) {
         int lastMerged = -1;
 
         // od lewej do prawej
-        for (int j = 1; j < SIZE; ++j) {
+        for (int j = 1; j < SIZE; j++) {
             if (grid[i][j] != 0) {
                 int current = j;
 
@@ -88,10 +88,10 @@ void moveTilesLeft() {
 }
 
 void moveTilesRight() {
-    for (int i = 0; i < SIZE; ++i) {
+    for (int i = 0; i < SIZE; i++) {
         int lastMerged = SIZE;
 
-        for (int j = SIZE - 2; j >= 0; --j) {
+        for (int j = SIZE - 2; j >= 0; j--) {
             if (grid[i][j] != 0) {
                 int current = j;
 
@@ -118,10 +118,10 @@ void moveTilesRight() {
 }
 
 void moveTilesUp() {
-    for (int j = 0; j < SIZE; ++j) {
+    for (int j = 0; j < SIZE; j++) {
         int lastMerged = -1;
 
-        for (int i = 1; i < SIZE; ++i) {
+        for (int i = 1; i < SIZE; i++) {
             if (grid[i][j] != 0) {
                 int current = i;
 
@@ -148,10 +148,10 @@ void moveTilesUp() {
 }
 
 void moveTilesDown() {
-    for (int j = 0; j < SIZE; ++j) {
+    for (int j = 0; j < SIZE; j++) {
         int lastMerged = SIZE;
 
-        for (int i = SIZE - 2; i >= 0; --i) {
+        for (int i = SIZE - 2; i >= 0; i--) {
             if (grid[i][j] != 0) {
                 int current = i;
 
@@ -182,8 +182,8 @@ void renderGridAndTiles() {
     int valueArray[] = {0};
     int gridSize = 4;
     int tileSize = 100;
-    for (int i = 0; i < gridSize; ++i) {
-        for (int j = 0; j < gridSize; ++j) {
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
             int value = grid[i][j];
             float x = j * tileSize;
             float y = i * tileSize;
@@ -237,7 +237,7 @@ void renderGridAndTiles() {
         glColor3f(0.0, 0.0, 0.0);
         glLineWidth(3.0);
         glBegin(GL_LINES);
-        for (int i = 0; i <= gridSize; ++i) {
+        for (int i = 0; i <= gridSize; i++) {
             glVertex2f(0, i * tileSize);
             glVertex2f(gridSize * tileSize, i * tileSize);
             glVertex2f(i * tileSize, 0);
