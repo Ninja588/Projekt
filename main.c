@@ -4,11 +4,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SIZE 4
+#define SIZE 4 // rozmiar siatki
 
-int grid[SIZE][SIZE];
-int emptySpaces;
+int grid[SIZE][SIZE]; // siatka
+int emptySpaces; // puste miejsca (tiles z wartoscia '0')
 
+// aktualizaowanie pustych miejsc na siatce
 void updateEmptySpaces() {
     emptySpaces = 0;
     for (int i = 0; i < SIZE; i++) {
@@ -20,6 +21,7 @@ void updateEmptySpaces() {
     }
 }
 
+// generowanie nowego tile'sa w losowej pozycji na siatce 4x4 o wartosci 2 lub 4
 void generateNewTile() {
     int value = rand() % 2 == 0 ? 2 : 4;
     if (emptySpaces > 0) {
@@ -40,6 +42,7 @@ void generateNewTile() {
     updateEmptySpaces();
 }
 
+// przypisanie wartosci '0' do kazdego miejsca w siatce i wygenerowanie 2 poczatkowych tile'sow
 void initializeGrid() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -51,6 +54,7 @@ void initializeGrid() {
     generateNewTile();
 }
 
+// ruch w lewo
 void moveTilesLeft() {
     for (int i = 0; i < SIZE; i++) {
         int lastMerged = -1;
@@ -85,6 +89,7 @@ void moveTilesLeft() {
     glutPostRedisplay();
 }
 
+// ruch w prawo
 void moveTilesRight() {
     for (int i = 0; i < SIZE; i++) {
         int lastMerged = SIZE;
@@ -115,6 +120,7 @@ void moveTilesRight() {
     glutPostRedisplay();
 }
 
+// ruch w gore
 void moveTilesUp() {
     for (int j = 0; j < SIZE; j++) {
         int lastMerged = -1;
@@ -145,6 +151,7 @@ void moveTilesUp() {
     glutPostRedisplay();
 }
 
+// ruch w dol
 void moveTilesDown() {
     for (int j = 0; j < SIZE; j++) {
         int lastMerged = SIZE;
@@ -175,11 +182,12 @@ void moveTilesDown() {
     glutPostRedisplay();
 }
 
+// render siatki i tile'sow
 void renderGridAndTiles() {
     int temp = 0;
-    int valueArray[] = {0};
-    int gridSize = 4;
-    int tileSize = 100;
+    int valueArray[] = {0}; // tablica przechowywujaca wartosc tilesa do wypisania na nim
+    int gridSize = SIZE; // rozmiar siatki (4x4)
+    int tileSize = 100; // rozmiar tile (100x100 px)
     for (int i = 0; i < gridSize; i++) {
         for (int j = 0; j < gridSize; j++) {
             int value = grid[i][j];
@@ -293,6 +301,7 @@ void renderGridAndTiles() {
             //     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
             //     glColor3f(0.0, 2.0, 2.0);
             // }
+            // zaczecie rysowania tilesow
             glBegin(GL_QUADS);
             glVertex2f(x, y);
             glVertex2f(x + tileSize, y);
@@ -315,8 +324,9 @@ void renderGridAndTiles() {
                 temp = 0;
             }
         }
-        glColor3f(0.0, 0.0, 0.0);
-        glLineWidth(3.0);
+        glColor3f(0.0, 0.0, 0.0); // kolor linii
+        glLineWidth(3.0); // grubosc linii
+        // zaczecie rysowania linii
         glBegin(GL_LINES);
         for (int i = 0; i <= gridSize; i++) {
             glVertex2f(0, i * tileSize);
@@ -334,6 +344,7 @@ void display() {
     glutSwapBuffers();
 }
 
+// funkcja obslugujaca wciskanie przyciskow z klawiatury
 void handleKeyPress(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
