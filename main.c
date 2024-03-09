@@ -1,5 +1,3 @@
-//#include <gl/glew.h>
-//#include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <GL/glut.h>
 #include <GL/glu.h> 
@@ -187,31 +185,114 @@ void renderGridAndTiles() {
             int value = grid[i][j];
             float x = j * tileSize;
             float y = i * tileSize;
-            if (value == 0) {
-                glColor3f(0.7, 0.7, 0.7);
-            } else if (value == 2) {
-                glColor3f(1.0, 0.0, 0.0);
-            } else if (value == 4) {
-                glColor3f(0.0, 1.0, 0.0);
-            } else if (value == 8) {
-                glColor3f(0.0, 0.0, 1.0);
-            } else if (value == 16) {
-                glColor3f(0.0, 1.0, 1.0);
-            } else if (value == 32) {
-                glColor3f(0.0, 0.0, 1.0);
-            } else if (value == 64) {
-                glColor3f(1.0, 0.0, 1.0);
-            } else if (value == 128) {
-                glColor3f(1.0, 1.0, 1.0);
-            } else if (value == 256) {
-                glColor3f(0.0, 2.0, 1.0);
-            } else if (value == 512) {
-                glColor3f(2.0, 0.0, 1.0);
-            } else if (value == 1024) {
-                glColor3f(2.0, 2.0, 1.0);
-            } else if (value == 2048) {
-                glColor3f(0.0, 2.0, 2.0);
+            switch(value)
+            {
+                case 0:
+                    glColor3f(0.7, 0.7, 0.7);
+                    break;
+                case 2:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(1.0, 0.0, 0.0);
+                    break;
+                case 4:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(0.0, 1.0, 0.0);
+                    break;
+                case 8:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(0.0, 0.0, 1.0);
+                    break;
+                case 16:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(0.0, 1.0, 1.0);
+                    break;
+                case 32:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(1.0, 1.0, 1.0);
+                    break;
+                case 64:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(0.3, 0.6, 1.0);
+                    break;
+                case 128:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(1.0, 2.0, 1.0);
+                    break;
+                case 256:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(1.0, 1.0, 2.0);
+                    break;
+                case 512:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(2.0, 1.0, 2.0);
+                    break;
+                case 1024:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(2.0, 2.0, 1.0);
+                    break;
+                case 2048:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(0.0, 2.0, 2.0);
+                    break;
             }
+            // if (value == 0) {
+            //     glColor3f(0.7, 0.7, 0.7);
+            // } else if (value == 2) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(1.0, 0.0, 0.0);
+            // } else if (value == 4) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(0.0, 1.0, 0.0);
+            // } else if (value == 8) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(0.0, 0.0, 1.0);
+            // } else if (value == 16) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(0.0, 1.0, 1.0);
+            // } else if (value == 32) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(0.0, 0.0, 1.0);
+            // } else if (value == 64) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(1.0, 0.0, 1.0);
+            // } else if (value == 128) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(1.0, 1.0, 1.0);
+            // } else if (value == 256) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(0.0, 2.0, 1.0);
+            // } else if (value == 512) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(2.0, 0.0, 1.0);
+            // } else if (value == 1024) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(2.0, 2.0, 1.0);
+            // } else if (value == 2048) {
+            //     glColor3f(0.0, 0.0, 0.0);
+            //     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+            //     glColor3f(0.0, 2.0, 2.0);
+            // }
             glBegin(GL_QUADS);
             glVertex2f(x, y);
             glVertex2f(x + tileSize, y);
@@ -219,8 +300,8 @@ void renderGridAndTiles() {
             glVertex2f(x, y + tileSize);
             glEnd();
             if (value != 0) {
-                glColor3f(0.0, 0.0, 0.0);
-                glRasterPos2f(x + 0.5 * tileSize, y + 0.5 * tileSize);
+                //glColor3f(0.0, 0.0, 0.0);
+                //glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
                 while(value != 0)
                 {
                     valueArray[temp] = value%10;
