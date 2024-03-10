@@ -193,8 +193,7 @@ void renderGridAndTiles() {
             int value = grid[i][j];
             float x = j * tileSize;
             float y = i * tileSize;
-            switch(value)
-            {
+            switch(value) {
                 case 0:
                     glColor3f(0.7, 0.7, 0.7);
                     break;
@@ -311,14 +310,12 @@ void renderGridAndTiles() {
             if (value != 0) {
                 //glColor3f(0.0, 0.0, 0.0);
                 //glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
-                while(value != 0)
-                {
+                while(value != 0) {
                     valueArray[temp] = value%10;
                     temp++;
                     value/=10;
                 }
-                for(int i=temp-1;i>=0;i--)
-                {
+                for(int i=temp-1;i>=0;i--) {
                     glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, valueArray[i] + '0');
                 }
                 temp = 0;
