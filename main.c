@@ -1,3 +1,10 @@
+/**
+ * @file main.c
+ * @brief Główny plik programu 2048.
+ *
+ * Ten plik zawiera funkcję `main` oraz podstawową logikę gry 2048.
+ */
+
 #include <stdio.h>
 #include <GL/glut.h>
 #include <GL/glu.h> 
