@@ -4,12 +4,36 @@
 #include <stdlib.h>
 #include <time.h>
 
+/**
+ * @brief Rozmiar siatki gry.
+ * Określa liczbę wierszy i kolumn w siatce gry.
+ * Wartość ta kontroluje wielkość siatki gry, która jest kwadratowa.
+ * Zwiększenie tej wartości zwiększy liczbę pól na siatce gry.
+ */
 #define SIZE 4 // rozmiar siatki
 
+/**
+ * @brief Siatka gry.
+ * 
+ * Dwuwymiarowa tablica przechowująca stan gry.
+ * Wartości w siatce mogą być 0 (reprezentują puste miejsce) lub potęgi liczby 2 (2, 4, 8, 16, itd.).
+ */
 int grid[SIZE][SIZE]; // siatka
+
+/**
+ * @brief Liczba pustych miejsc na siatce gry.
+ * 
+ * Używane do kontroli, ile jeszcze miejsc na nowe klocki jest dostępnych.
+ */
 int emptySpaces; // puste miejsca (tiles z wartoscia '0')
 
 // aktualizaowanie pustych miejsc na siatce
+/**
+ * @brief Aktualizuje liczbę pustych miejsc na siatce.
+ * 
+ * Funkcja przelicza ilość pustych miejsc na siatce, czyli tile'ów z wartością '0',
+ * i zapisuje tę wartość w zmiennej globalnej emptySpaces.
+ */
 void updateEmptySpaces() {
     emptySpaces = 0;
     for (int i = 0; i < SIZE; i++) {
@@ -22,8 +46,14 @@ void updateEmptySpaces() {
 }
 
 // generowanie nowego tile'sa w losowej pozycji na siatce 4x4 o wartosci 2 lub 4
+/**
+ * @brief Generuje nowy tile w losowej pozycji na siatce 4x4 o wartości 2 lub 4.
+ * 
+ * Funkcja generuje nowy tile (o wartości 2 lub 4) na losowej pozycji na siatce, 
+ * jeśli są dostępne puste miejsca.
+ */
 void generateNewTile() {
-    int value = rand() % 2 == 0 ? 2 : 4;
+    int value = rand() % 2 == 0 ? 512 : 512;
     if (emptySpaces > 0) {
         int randomIndex = rand() % emptySpaces;
         int count = 0;
@@ -43,6 +73,12 @@ void generateNewTile() {
 }
 
 // przypisanie wartosci '0' do kazdego miejsca w siatce i wygenerowanie 2 poczatkowych tile'sow
+/**
+ * @brief Inicjalizuje siatkę i generuje 2 początkowe tilesy.
+ * 
+ * Funkcja przygotowuje początkową siatkę gry ustawiając wszystkie wartości na '0',
+ * a następnie generuje dwa losowe tile'y na siatce.
+ */
 void initializeGrid() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -55,6 +91,12 @@ void initializeGrid() {
 }
 
 // ruch w lewo
+/**
+ * @brief Przesuwa tilesy w lewo.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy, w lewo na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesLeft() {
     for (int i = 0; i < SIZE; i++) {
         int lastMerged = -1;
@@ -90,6 +132,12 @@ void moveTilesLeft() {
 }
 
 // ruch w prawo
+/**
+ * @brief Przesuwa tilesy w prawo.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w prawo na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesRight() {
     for (int i = 0; i < SIZE; i++) {
         int lastMerged = SIZE;
@@ -121,6 +169,12 @@ void moveTilesRight() {
 }
 
 // ruch w gore
+/**
+ * @brief Przesuwa tilesy w górę.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w górę na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesUp() {
     for (int j = 0; j < SIZE; j++) {
         int lastMerged = -1;
@@ -152,6 +206,12 @@ void moveTilesUp() {
 }
 
 // ruch w dol
+/**
+ * @brief Przesuwa tilesy w dół.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w dół na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesDown() {
     for (int j = 0; j < SIZE; j++) {
         int lastMerged = SIZE;
@@ -183,9 +243,12 @@ void moveTilesDown() {
 }
 
 // render siatki i tile'sow
+/**
+ * @brief Renderuje siatkę i tilesy.
+ */
 void renderGridAndTiles() {
     int temp = 0;
-    int valueArray[] = {0}; // tablica przechowywujaca wartosc tilesa do wypisania na nim
+    int valueArray[2048]; // tablica przechowywujaca wartosc tilesa do wypisania na nim
     int gridSize = SIZE; // rozmiar siatki (4x4)
     int tileSize = 100; // rozmiar tile (100x100 px)
     for (int i = 0; i < gridSize; i++) {
@@ -230,27 +293,27 @@ void renderGridAndTiles() {
                 case 128:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(1.0, 2.0, 1.0);
+                    glColor3f(1.0, 0.0, 1.0);
                     break;
                 case 256:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(1.0, 1.0, 2.0);
+                    glColor3f(1.0, 0.4, 0.5);
                     break;
                 case 512:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(2.0, 1.0, 2.0);
+                    glColor3f(0.0, 1.0, 0.5);
                     break;
                 case 1024:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(2.0, 2.0, 1.0);
+                    glColor3f(0.5, 0.4, 0.0);
                     break;
                 case 2048:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.0, 2.0, 2.0);
+                    glColor3f(0.0, 0.5, 0.5);
                     break;
             }
             // if (value == 0) {
@@ -308,8 +371,8 @@ void renderGridAndTiles() {
             glVertex2f(x, y + tileSize);
             glEnd();
             if (value != 0) {
-                //glColor3f(0.0, 0.0, 0.0);
-                //glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
+               // glColor3f(0.0, 0.0, 0.0);
+               // glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
                 while(value != 0) {
                     valueArray[temp] = value%10;
                     temp++;
@@ -336,6 +399,11 @@ void renderGridAndTiles() {
 }
 
 // funkcja wyswietlajaca
+/**
+ * @brief Funkcja wyświetlająca.
+ * 
+ * Funkcja wyświetla zawartość okna gry, renderując siatkę i tilesy.
+ */
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     renderGridAndTiles();
@@ -343,6 +411,12 @@ void display() {
 }
 
 // funkcja sprawdzajaca, czy gracz przegral
+/**
+ * @brief Sprawdza, czy gracz przegrał.
+ * 
+ * Funkcja sprawdza, czy gracz przegrał, czyli czy nie ma możliwych ruchów na planszy.
+ * @return 1, jeśli gracz przegrał, w przeciwnym razie 0.
+ */
 int checkGameOver() {
     // sprawdzenie czy sa puste miejsca na planszy
     if (emptySpaces > 0)
@@ -370,6 +444,12 @@ int checkGameOver() {
     return 1;
 }
 
+/**
+ * @brief Sprawdza, czy gracz wygrał.
+ * 
+ * Funkcja sprawdza, czy gracz osiągnął wartość 2048 na jednym z tile'ów.
+ * @return 1, jeśli gracz wygrał, w przeciwnym razie 0.
+ */
 int checkWin() {
     // sprawdzenie każdego kafelka na planszy
     for (int i = 0; i < SIZE; i++) {
@@ -382,6 +462,15 @@ int checkWin() {
 }
 
 // funkcja obslugujaca wciskanie przyciskow z klawiatury i obslugiwanie przegranej/wygranej
+/**
+ * @brief Obsługuje wciskanie przycisków z klawiatury oraz sprawdza przegraną i wygraną.
+ * 
+ * Funkcja obsługuje wciśnięcia przycisków z klawiatury, przesuwając tilesy odpowiednio.
+ * Dodatkowo sprawdza, czy gracz przegrał lub wygrał, wyświetlając odpowiednie komunikaty.
+ * @param key Wciśnięty klawisz.
+ * @param x Współrzędna x ekranu.
+ * @param y Współrzędna y ekranu.
+ */
 void handleKeyPress(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
@@ -410,6 +499,14 @@ void handleKeyPress(int key, int x, int y) {
     }
 }
 
+/**
+ * @brief Funkcja główna programu.
+ * 
+ * Funkcja główna programu, inicjalizuje siatkę gry, okno GLUT oraz pętlę główną.
+ * @param argc Liczba argumentów wiersza poleceń.
+ * @param argv Tablica argumentów wiersza poleceń.
+ * @return Wartość zwracana przez funkcję main().
+ */
 int main(int argc, char** argv) {
     srand(time(NULL)); // generowanie seedu
     initializeGrid(); // inicjalizacja siatki gry
@@ -421,7 +518,14 @@ int main(int argc, char** argv) {
     glLoadIdentity();
     gluOrtho2D(0, 400, 400, 0); // ustawienie obszaru ortogonalnego
     glutDisplayFunc(display);
+    glutReportErrors();
     glutSpecialFunc(handleKeyPress);
+    // for (int i = 0; i < SIZE; i++) {
+    //     for (int j = 0; j < SIZE; j++) {
+    //         int current = grid[i][j];
+    //         printf("%d\n", current);
+    //     }
+    // }
     glutMainLoop();
     return 0;
 }
