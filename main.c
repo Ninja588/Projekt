@@ -53,7 +53,7 @@ void updateEmptySpaces() {
  * jeśli są dostępne puste miejsca.
  */
 void generateNewTile() {
-    int value = rand() % 2 == 0 ? 512 : 512;
+    int value = rand() % 2 == 0 ? 2 : 4;
     if (emptySpaces > 0) {
         int randomIndex = rand() % emptySpaces;
         int count = 0;
@@ -248,7 +248,7 @@ void moveTilesDown() {
  */
 void renderGridAndTiles() {
     int temp = 0;
-    int valueArray[2048]; // tablica przechowywujaca wartosc tilesa do wypisania na nim
+    int valueArray[4]; // tablica przechowywujaca wartosc tilesa do wypisania na nim
     int gridSize = SIZE; // rozmiar siatki (4x4)
     int tileSize = 100; // rozmiar tile (100x100 px)
     for (int i = 0; i < gridSize; i++) {
