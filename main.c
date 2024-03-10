@@ -10,6 +10,7 @@
 #include <GL/glu.h> 
 #include <stdlib.h>
 #include <time.h>
+#include <mmsystem.h>
 
 /**
  * @brief Rozmiar siatki gry.
@@ -507,6 +508,15 @@ void handleKeyPress(int key, int x, int y) {
 }
 
 /**
+ * @brief Funkcja odtwarzająca muzykę w tle.
+ * 
+ * Funkcja odtwarza muzykę z pliku o nazwie DS.wav
+ */
+void playBackgroundMusic() {
+    PlaySound(TEXT("music//DS.wav"), NULL, SND_ASYNC | SND_LOOP);
+}
+
+/**
  * @brief Funkcja główna programu.
  * 
  * Funkcja główna programu, inicjalizuje siatkę gry, okno GLUT oraz pętlę główną.
@@ -527,6 +537,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutReportErrors();
     glutSpecialFunc(handleKeyPress);
+    playBackgroundMusic();
     // for (int i = 0; i < SIZE; i++) {
     //     for (int j = 0; j < SIZE; j++) {
     //         int current = grid[i][j];
