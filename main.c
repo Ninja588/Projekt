@@ -335,13 +335,53 @@ void renderGridAndTiles() {
     }
 }
 
+// funkcja wyswietlajaca
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     renderGridAndTiles();
     glutSwapBuffers();
 }
 
-// funkcja obslugujaca wciskanie przyciskow z klawiatury
+// funkcja sprawdzajaca, czy gracz przegral
+int checkGameOver() {
+    // sprawdzenie czy sa puste miejsca na planszy
+    if (emptySpaces > 0)
+        return 0; // gracz nie przegral, bo sa jeszcze puste miejsca
+
+    // sprawdzenie czy sa mozliwe ruchy w lewo, prawo, gore lub dol
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            int current = grid[i][j];
+            // sprawdzenie ruchu w lewo
+            if (j > 0 && grid[i][j - 1] == current)
+                return 0;
+            // sprawdzenie ruchu w prawo
+            if (j < SIZE - 1 && grid[i][j + 1] == current)
+                return 0;
+            // sprawdzenie ruchu w górę
+            if (i > 0 && grid[i - 1][j] == current)
+                return 0;
+            // sprawdzenie ruchu w dol
+            if (i < SIZE - 1 && grid[i + 1][j] == current)
+                return 0;
+        }
+    }
+    // brak mozliwych ruchow, gracz przegral
+    return 1;
+}
+
+int checkWin() {
+    // sprawdzenie każdego kafelka na planszy
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (grid[i][j] == 2048) // jesli wartosc kafelka wynosi 2048, gracz wygrywa
+                return 1;
+        }
+    }
+    return 0; // Gracz nie wygrał
+}
+
+// funkcja obslugujaca wciskanie przyciskow z klawiatury i obslugiwanie przegranej/wygranej
 void handleKeyPress(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
@@ -357,18 +397,29 @@ void handleKeyPress(int key, int x, int y) {
             moveTilesDown();
             break;
     }
+
+    if(checkGameOver())
+    {
+        printf("przegrales!");
+        exit(0);
+    }
+    if(checkWin())
+    {
+        printf("wygrales!");
+        exit(0);
+    }
 }
 
 int main(int argc, char** argv) {
-    srand(time(NULL));
-    initializeGrid();
+    srand(time(NULL)); // generowanie seedu
+    initializeGrid(); // inicjalizacja siatki gry
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(400, 400);
     glutCreateWindow("2048");
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, 400, 400, 0);
+    gluOrtho2D(0, 400, 400, 0); // ustawienie obszaru ortogonalnego
     glutDisplayFunc(display);
     glutSpecialFunc(handleKeyPress);
     glutMainLoop();
