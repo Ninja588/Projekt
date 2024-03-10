@@ -541,7 +541,7 @@ int main(int argc, char** argv) {
     // for (int i = 0; i < SIZE; i++) {
     //     for (int j = 0; j < SIZE; j++) {
     //         int current = grid[i][j];
-    //         printf("%d\n", current);
+    //         printf("[%d][%d] = %d\n", i, j, current);
     //     }
     // }
     glutMainLoop();
