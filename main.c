@@ -379,8 +379,6 @@ void renderGridAndTiles() {
             glVertex2f(x, y + tileSize);
             glEnd();
             if (value != 0) {
-               // glColor3f(0.0, 0.0, 0.0);
-               // glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
                 while(value != 0) {
                     valueArray[temp] = value%10;
                     temp++;
