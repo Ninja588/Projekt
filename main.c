@@ -390,18 +390,18 @@ void renderGridAndTiles() {
                 temp = 0;
             }
         }
-        glColor3f(0.0, 0.0, 0.0); // kolor linii
-        glLineWidth(3.0); // grubosc linii
-        // zaczecie rysowania linii
-        glBegin(GL_LINES);
-        for (int i = 0; i <= gridSize; i++) {
-            glVertex2f(0, i * tileSize);
-            glVertex2f(gridSize * tileSize, i * tileSize);
-            glVertex2f(i * tileSize, 0);
-            glVertex2f(i * tileSize, gridSize * tileSize);
-        }
-        glEnd();
     }
+    glColor3f(0.0, 0.0, 0.0); // kolor linii
+    glLineWidth(3.0); // grubosc linii
+    // zaczecie rysowania linii
+    glBegin(GL_LINES);
+    for (int i = 0; i <= gridSize; i++) {
+        glVertex2f(0, i * tileSize);
+        glVertex2f(gridSize * tileSize, i * tileSize);
+        glVertex2f(i * tileSize, 0);
+        glVertex2f(i * tileSize, gridSize * tileSize);
+    }
+    glEnd();
 }
 
 // funkcja wyswietlajaca
