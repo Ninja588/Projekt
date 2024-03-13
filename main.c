@@ -518,8 +518,6 @@ void playBackgroundMusic() {
  * @brief Funkcja główna programu.
  * 
  * Funkcja główna programu, inicjalizuje siatkę gry, okno GLUT oraz pętlę główną.
- * @param argc Liczba argumentów wiersza poleceń.
- * @param argv Tablica argumentów wiersza poleceń.
  * @return Wartość zwracana przez funkcję main().
  */
 int main(int argc, char** argv) {
