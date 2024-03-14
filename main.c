@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <mmsystem.h>
+#include <unistd.h>
 
 /**
  * @brief Rozmiar siatki gry.
@@ -105,6 +106,7 @@ void initializeGrid() {
  * Funkcja przesuwa wszystkie niepuste tilesy, w lewo na siatce, 
  * łącząc te same wartości, jeśli to możliwe.
  */
+/*
 void moveTilesLeft() {
     for (int i = 0; i < SIZE; i++) {
         int lastMerged = -1;
@@ -123,7 +125,9 @@ void moveTilesLeft() {
                 // merge
                 if (mergePosition >= 0 && grid[i][current] == grid[i][mergePosition] && current - lastMerged <= SIZE) {
                     grid[i][mergePosition] *= 2;
+                    //grid[i][mergePosition-current+1] = grid[i][current];
                     grid[i][current] = 0;
+                   //grid[i][mergePosition] *= 2;
                     lastMerged = mergePosition;
                 } else {
                     // przesuwanie na lewo
@@ -138,6 +142,10 @@ void moveTilesLeft() {
     generateNewTile();
     glutPostRedisplay();
 }
+*/
+
+
+
 
 // ruch w prawo
 /**
@@ -146,35 +154,35 @@ void moveTilesLeft() {
  * Funkcja przesuwa wszystkie niepuste tilesy w prawo na siatce, 
  * łącząc te same wartości, jeśli to możliwe.
  */
-void moveTilesRight() {
-    for (int i = 0; i < SIZE; i++) {
-        int lastMerged = SIZE;
+// void moveTilesRight() {
+//     for (int i = 0; i < SIZE; i++) {
+//         int lastMerged = SIZE;
 
-        for (int j = SIZE - 2; j >= 0; j--) {
-            if (grid[i][j] != 0) {
-                int current = j;
+//         for (int j = SIZE - 2; j >= 0; j--) {
+//             if (grid[i][j] != 0) {
+//                 int current = j;
 
-                int mergePosition = current + 1;
-                while (mergePosition < SIZE && grid[i][mergePosition] == 0) {
-                    mergePosition++;
-                }
+//                 int mergePosition = current + 1;
+//                 while (mergePosition < SIZE && grid[i][mergePosition] == 0) {
+//                     mergePosition++;
+//                 }
 
-                if (mergePosition < SIZE && grid[i][current] == grid[i][mergePosition] && lastMerged - current <= SIZE) {
-                    grid[i][mergePosition] *= 2;
-                    grid[i][current] = 0;
-                    lastMerged = mergePosition;
-                } else {
-                    if (mergePosition - 1 != current) {
-                        grid[i][mergePosition - 1] = grid[i][current];
-                        grid[i][current] = 0;
-                    }
-                }
-            }
-        }
-    }
-    generateNewTile();
-    glutPostRedisplay();
-}
+//                 if (mergePosition < SIZE && grid[i][current] == grid[i][mergePosition] && lastMerged - current <= SIZE) {
+//                     grid[i][mergePosition] *= 2;
+//                     grid[i][current] = 0;
+//                     lastMerged = mergePosition;
+//                 } else {
+//                     if (mergePosition - 1 != current) {
+//                         grid[i][mergePosition - 1] = grid[i][current];
+//                         grid[i][current] = 0;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     generateNewTile();
+//     glutPostRedisplay();
+// }
 
 // ruch w gore
 /**
@@ -183,35 +191,35 @@ void moveTilesRight() {
  * Funkcja przesuwa wszystkie niepuste tilesy w górę na siatce, 
  * łącząc te same wartości, jeśli to możliwe.
  */
-void moveTilesUp() {
-    for (int j = 0; j < SIZE; j++) {
-        int lastMerged = -1;
+// void moveTilesUp() {
+//     for (int j = 0; j < SIZE; j++) {
+//         int lastMerged = -1;
 
-        for (int i = 1; i < SIZE; i++) {
-            if (grid[i][j] != 0) {
-                int current = i;
+//         for (int i = 1; i < SIZE; i++) {
+//             if (grid[i][j] != 0) {
+//                 int current = i;
 
-                int mergePosition = current - 1;
-                while (mergePosition >= 0 && grid[mergePosition][j] == 0) {
-                    mergePosition--;
-                }
+//                 int mergePosition = current - 1;
+//                 while (mergePosition >= 0 && grid[mergePosition][j] == 0) {
+//                     mergePosition--;
+//                 }
 
-                if (mergePosition >= 0 && grid[current][j] == grid[mergePosition][j] && current - lastMerged <= SIZE) {
-                    grid[mergePosition][j] *= 2;
-                    grid[current][j] = 0;
-                    lastMerged = mergePosition;
-                } else {
-                    if (mergePosition + 1 != current) {
-                        grid[mergePosition + 1][j] = grid[current][j];
-                        grid[current][j] = 0;
-                    }
-                }
-            }
-        }
-    }
-    generateNewTile();
-    glutPostRedisplay();
-}
+//                 if (mergePosition >= 0 && grid[current][j] == grid[mergePosition][j] && current - lastMerged <= SIZE) {
+//                     grid[mergePosition][j] *= 2;
+//                     grid[current][j] = 0;
+//                     lastMerged = mergePosition;
+//                 } else {
+//                     if (mergePosition + 1 != current) {
+//                         grid[mergePosition + 1][j] = grid[current][j];
+//                         grid[current][j] = 0;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     generateNewTile();
+//     glutPostRedisplay();
+// }
 
 // ruch w dol
 /**
@@ -220,35 +228,35 @@ void moveTilesUp() {
  * Funkcja przesuwa wszystkie niepuste tilesy w dół na siatce, 
  * łącząc te same wartości, jeśli to możliwe.
  */
-void moveTilesDown() {
-    for (int j = 0; j < SIZE; j++) {
-        int lastMerged = SIZE;
+// void moveTilesDown() {
+//     for (int j = 0; j < SIZE; j++) {
+//         int lastMerged = SIZE;
 
-        for (int i = SIZE - 2; i >= 0; i--) {
-            if (grid[i][j] != 0) {
-                int current = i;
+//         for (int i = SIZE - 2; i >= 0; i--) {
+//             if (grid[i][j] != 0) {
+//                 int current = i;
 
-                int mergePosition = current + 1;
-                while (mergePosition < SIZE && grid[mergePosition][j] == 0) {
-                    mergePosition++;
-                }
+//                 int mergePosition = current + 1;
+//                 while (mergePosition < SIZE && grid[mergePosition][j] == 0) {
+//                     mergePosition++;
+//                 }
 
-                if (mergePosition < SIZE && grid[current][j] == grid[mergePosition][j] && lastMerged - current <= SIZE) {
-                    grid[mergePosition][j] *= 2;
-                    grid[current][j] = 0;
-                    lastMerged = mergePosition;
-                } else {
-                    if (mergePosition - 1 != current) {
-                        grid[mergePosition - 1][j] = grid[current][j];
-                        grid[current][j] = 0;
-                    }
-                }
-            }
-        }
-    }
-    generateNewTile();
-    glutPostRedisplay();
-}
+//                 if (mergePosition < SIZE && grid[current][j] == grid[mergePosition][j] && lastMerged - current <= SIZE) {
+//                     grid[mergePosition][j] *= 2;
+//                     grid[current][j] = 0;
+//                     lastMerged = mergePosition;
+//                 } else {
+//                     if (mergePosition - 1 != current) {
+//                         grid[mergePosition - 1][j] = grid[current][j];
+//                         grid[current][j] = 0;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     generateNewTile();
+//     glutPostRedisplay();
+// }
 
 // render siatki i tile'sow
 /**
@@ -465,6 +473,198 @@ int checkWin() {
         }
     }
     return 0; // Gracz nie wygrał
+}
+
+// ruch w lewo
+/**
+ * @brief Przesuwa tilesy w lewo.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy, w lewo na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
+void moveTilesLeft() {
+    int animationDelay = 80000;
+    int stepDelay = animationDelay / SIZE;
+    
+    for (int i = 0; i < SIZE; i++) {
+        int lastMerged = -1;
+
+        for (int j = 1; j < SIZE; j++) {
+            if (grid[i][j] != 0) {
+                int current = j;
+                int mergePosition = current - 1;
+                while (mergePosition >= 0 && grid[i][mergePosition] == 0) {
+                    mergePosition--;
+                }
+
+                if (mergePosition >= 0 && grid[i][current] == grid[i][mergePosition] && current - lastMerged <= SIZE) {
+                    for (int k = current; k > mergePosition; k--) {
+                        grid[i][k - 1] = grid[i][k];
+                        grid[i][k] = 0;
+                        display();
+                        usleep(stepDelay);
+                    }
+                    grid[i][mergePosition] *= 2;
+                    lastMerged = mergePosition;
+                } else {
+                    if (mergePosition + 1 != current) {
+                        for (int k = current; k > mergePosition + 1; k--) {
+                            grid[i][k - 1] = grid[i][k];
+                            grid[i][k] = 0;
+                            display();
+                            usleep(stepDelay);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    generateNewTile();
+    display();
+}
+
+// ruch w prawo
+/**
+ * @brief Przesuwa tilesy w prawo.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w prawo na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
+void moveTilesRight() {
+    int animationDelay = 80000;
+    int stepDelay = animationDelay / SIZE;
+    
+    for (int i = 0; i < SIZE; i++) {
+        int lastMerged = SIZE;
+
+        for (int j = SIZE - 2; j >= 0; j--) {
+            if (grid[i][j] != 0) {
+                int current = j;
+                int mergePosition = current + 1;
+                while (mergePosition < SIZE && grid[i][mergePosition] == 0) {
+                    mergePosition++;
+                }
+
+                if (mergePosition < SIZE && grid[i][current] == grid[i][mergePosition] && lastMerged - current <= SIZE) {
+                    for (int k = current; k < mergePosition; k++) {
+                        grid[i][k + 1] = grid[i][k];
+                        grid[i][k] = 0;
+                        display();
+                        usleep(stepDelay);
+                    }
+                    grid[i][mergePosition] *= 2;
+                    lastMerged = mergePosition;
+                } else {
+                    if (mergePosition - 1 != current) {
+                        for (int k = current; k < mergePosition - 1; k++) {
+                            grid[i][k + 1] = grid[i][k];
+                            grid[i][k] = 0;
+                            display();
+                            usleep(stepDelay);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    generateNewTile();
+    display();
+}
+
+// ruch w gore
+/**
+ * @brief Przesuwa tilesy w górę.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w górę na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
+void moveTilesUp() {
+    int animationDelay = 80000;
+    int stepDelay = animationDelay / SIZE;
+    
+    for (int j = 0; j < SIZE; j++) {
+        int lastMerged = -1;
+
+        for (int i = 1; i < SIZE; i++) {
+            if (grid[i][j] != 0) {
+                int current = i;
+                int mergePosition = current - 1;
+                while (mergePosition >= 0 && grid[mergePosition][j] == 0) {
+                    mergePosition--;
+                }
+
+                if (mergePosition >= 0 && grid[current][j] == grid[mergePosition][j] && current - lastMerged <= SIZE) {
+                    for (int k = current; k > mergePosition; k--) {
+                        grid[k - 1][j] = grid[k][j];
+                        grid[k][j] = 0;
+                        display();
+                        usleep(stepDelay);
+                    }
+                    grid[mergePosition][j] *= 2;
+                    lastMerged = mergePosition;
+                } else {
+                    if (mergePosition + 1 != current) {
+                        for (int k = current; k > mergePosition + 1; k--) {
+                            grid[k - 1][j] = grid[k][j];
+                            grid[k][j] = 0;
+                            display();
+                            usleep(stepDelay);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    generateNewTile();
+    display();
+}
+
+// ruch w dol
+/**
+ * @brief Przesuwa tilesy w dół.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w dół na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
+void moveTilesDown() {
+    int animationDelay = 80000;
+    int stepDelay = animationDelay / SIZE;
+    
+    for (int j = 0; j < SIZE; j++) {
+        int lastMerged = SIZE;
+
+        for (int i = SIZE - 2; i >= 0; i--) {
+            if (grid[i][j] != 0) {
+                int current = i;
+                int mergePosition = current + 1;
+                while (mergePosition < SIZE && grid[mergePosition][j] == 0) {
+                    mergePosition++;
+                }
+
+                if (mergePosition < SIZE && grid[current][j] == grid[mergePosition][j] && lastMerged - current <= SIZE) {
+                    for (int k = current; k < mergePosition; k++) {
+                        grid[k + 1][j] = grid[k][j];
+                        grid[k][j] = 0;
+                        display();
+                        usleep(stepDelay);
+                    }
+                    grid[mergePosition][j] *= 2;
+                    lastMerged = mergePosition;
+                } else {
+                    if (mergePosition - 1 != current) {
+                        for (int k = current; k < mergePosition - 1; k++) {
+                            grid[k + 1][j] = grid[k][j];
+                            grid[k][j] = 0;
+                            display();
+                            usleep(stepDelay);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    generateNewTile();
+    display();
 }
 
 // funkcja obslugujaca wciskanie przyciskow z klawiatury i obslugiwanie przegranej/wygranej
