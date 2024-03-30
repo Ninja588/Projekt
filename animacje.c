@@ -14,7 +14,6 @@
 #include <stdbool.h>
 
 #define SIZE 4 // rozmiar siatki
-
 #define SPEED 25 // szybkosc blokow
 
 int grid[SIZE][SIZE]; // siatka
@@ -32,12 +31,21 @@ struct tilePos {
 }animationPos[SIZE][SIZE];
 
 void resetanimationPos() {
-    for(int i=0;i<4;i++) {
-        for(int j=0;j<4;j++) {
+    for(int i=0;i<SIZE;i++) {
+        for(int j=0;j<SIZE;j++) {
             animationPos[i][j].jDest=-1;
             animationPos[i][j].iDest=-1;
             animationPos[i][j].destValue=0;
             animationPos[i][j].sourceValue=0;
+        }
+    }
+}
+
+void showValue() {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            int current = grid[i][j];
+            printf("[%d][%d] = %d\n", i, j, current);
         }
     }
 }
@@ -170,7 +178,6 @@ void generateNewTile() {
             }
         }
     }
-    updateEmptySpaces();
 }
 
 void initializeGrid() {
@@ -487,7 +494,8 @@ void renderGridAndTiles() {
             float y = i * tileSize;
             if(animationPos[i][j].iDest!=-1) {
                 drawTile(x,y,tileSize,animationPos[i][j].sourceValue,valueArray);
-                if(animationPos[i][j].jCurrentCoords==animationPos[i][j].jDest && animationPos[i][j].iCurrentCoords==animationPos[i][j].iDest) {
+                if(animationPos[i][j].jCurrentCoords==animationPos[i][j].jDest && 
+                    animationPos[i][j].iCurrentCoords==animationPos[i][j].iDest) {
                     //grid[animationPos[i][j].iSource][animationPos[i][j].jSource]=0;
                     grid[ (animationPos[i][j].iDest)/100 ][ (animationPos[i][j].jDest)/100 ]=animationPos[i][j].destValue;
                     animationPos[i][j].iDest=-1;
@@ -502,8 +510,8 @@ void renderGridAndTiles() {
                 drawTile(x,y,tileSize,value,valueArray);
                 glPopMatrix();
             }
-            for(int k=0;k<4;k++) {
-                for(int l=0;l<4;l++) {
+            for(int k=0;k<SIZE;k++) {
+                for(int l=0;l<SIZE;l++) {
                     if(animationPos[k][l].iDest!=-1)
                         isEmpty=false;
                 }
@@ -523,6 +531,9 @@ void renderGridAndTiles() {
             if(isEmpty) {
                 if(counter) {
                     generateNewTile();
+                    updateEmptySpaces();
+                    //printf("%d ",emptySpaces);
+                    //showValue();
                     counter=0;
                 }
                 glLoadIdentity();
@@ -607,12 +618,6 @@ void renderGridAndTiles() {
     }
 }
 
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    renderGridAndTiles();
-    glutSwapBuffers();
-}
-
 int checkGameOver() {
     // sprawdzenie czy sa puste miejsca na planszy
     if (emptySpaces > 0)
@@ -651,6 +656,20 @@ int checkWin() {
     return 0; // Gracz nie wygrał
 }
 
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    renderGridAndTiles();
+    if(checkGameOver()) {
+        printf("przegrales!");
+        exit(0);
+    }
+    if(checkWin()) {
+        printf("wygrales!");
+        exit(0);
+    }
+    glutSwapBuffers();
+}
+
 void handleKeyPress(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
@@ -666,17 +685,6 @@ void handleKeyPress(int key, int x, int y) {
             moveTilesDown();
             break;
     }
-
-    if(checkGameOver())
-    {
-        printf("przegrales!");
-        exit(0);
-    }
-    if(checkWin())
-    {
-        printf("wygrales!");
-        exit(0);
-    }
 }
 
 void timer() {
@@ -684,8 +692,8 @@ void timer() {
     glutTimerFunc(1000/60,timer,0);
 
     if(xd!=0 || yd!=0) {
-        for(int i=0;i<4;i++) {
-            for(int j=0;j<4;j++) {
+        for(int i=0;i<SIZE;i++) {
+            for(int j=0;j<SIZE;j++) {
                 if(animationPos[i][j].iDest!=-1) {
                     animationPos[i][j].iCurrentCoords+=yd;
                     animationPos[i][j].jCurrentCoords+=xd;
@@ -697,7 +705,7 @@ void timer() {
 }
 
 void playBackgroundMusic() {
-    PlaySound(TEXT("music//AS.wav"), NULL, SND_ASYNC | SND_LOOP);
+    PlaySound(TEXT("music//DS.wav"), NULL, SND_ASYNC | SND_LOOP);
 }
 
 int main(int argc, char** argv) {
