@@ -847,7 +847,7 @@ void mouse(int button, int state, int x, int y) {
             glLoadIdentity();
             gluOrtho2D(0,SIZE*100,SIZE*100,0); // ustawienie obszaru ortogonalnego
             glutDisplayFunc(display);
-            glutIdleFunc(display);
+            //glutIdleFunc(display);
             glutReportErrors();
             glutSpecialFunc(handleKeyPress);
             //glutFullScreen();
@@ -902,7 +902,7 @@ int main(int argc, char** argv) {
     glLoadIdentity();
     glEnable( GL_TEXTURE_2D );
     glutDisplayFunc(display2);
-    glutIdleFunc(display2);
+    //glutIdleFunc(display2);
     glutMouseFunc(mouse);
     // srand(time(NULL)); // generowanie seedu
     // resetanimationPos();
