@@ -14,11 +14,16 @@
 #include <stdbool.h>
 
 #define SIZE 4 // rozmiar siatki
-#define SPEED 25 // szybkosc blokow
+#define SPEED 25*(SIZE/4) // szybkosc blokow
 
 int grid[SIZE][SIZE]; // siatka
 
 int emptySpaces,xd,yd; // puste miejsca (tiles z wartoscia '0')
+
+void mouse();
+void timer();
+void playBackgroundMusic();
+void scoreHandler();
 
 struct tilePos {
     int iDest;
@@ -29,6 +34,55 @@ struct tilePos {
     int destValue;
     int sourceValue;
 }animationPos[SIZE][SIZE];
+
+GLuint texture;
+
+GLuint LoadTexture(const char* filename) {
+    GLuint texture;
+    int width, height;
+    unsigned char* data;
+
+    FILE* file = fopen(filename, "rb");
+    if (file == NULL) return 0;
+
+    fseek(file, 18, SEEK_SET);
+    fread(&width, sizeof(int), 1, file);
+    fread(&height, sizeof(int), 1, file);
+    fseek(file, 54, SEEK_SET);
+
+    data = (unsigned char*)malloc(width * height * 3);
+    fread(data, width * height * 3, 1, file);
+    fclose(file);
+
+    for (int y=0;y<height/2;y++) {
+        for (int x=0;x<width*3;x++) {
+            unsigned char temp=data[y*width*3+x];
+            data[y*width*3+x]=data[(height-1-y)*width*3+x];
+            data[(height-1-y)*width*3+x]=temp;
+        }
+    }
+
+    for (int i = 0; i < width * height; i++) {
+        int index = i * 3;
+        unsigned char B, R;
+        B = data[index];
+        R = data[index + 2];
+        data[index] = R;
+        data[index + 2] = B;
+    }
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+    free(data);
+
+    return texture;
+}
 
 void resetanimationPos() {
     for(int i=0;i<SIZE;i++) {
@@ -202,7 +256,7 @@ void moveTilesLeft() {
                 animationPos[i][j].jDest=-1;
                 yd=0;
                 glLoadIdentity();
-                gluOrtho2D(0,400,400,0);
+                gluOrtho2D(0,SIZE*100,SIZE*100,0);
                 generateNewTile();
                 // counter=1;
             }
@@ -229,6 +283,7 @@ void moveTilesLeft() {
                     animationPos[i][k].jCurrentCoords=k*100;
                     animationPos[i][k].sourceValue=grid[i][k];
                     animationPos[i][k].destValue=grid[i][k]*2;
+                    scoreHandler(grid[i][k]);
                     grid[i][k]=0;
                     mergePosition++;
                     break;
@@ -271,7 +326,7 @@ void moveTilesRight() {
                 animationPos[i][j].jDest=-1;
                 yd=0;
                 glLoadIdentity();
-                gluOrtho2D(0,400,400,0);
+                gluOrtho2D(0,SIZE*100,SIZE*100,0);
                 generateNewTile();
                 // counter=1;
             }
@@ -297,6 +352,7 @@ void moveTilesRight() {
                     animationPos[i][k].jCurrentCoords=k*100;
                     animationPos[i][k].sourceValue=grid[i][k];
                     animationPos[i][k].destValue=grid[i][k]*2;
+                    scoreHandler(grid[i][k]);
                     grid[i][k]=0;
                     mergePosition--;
                     break;
@@ -339,7 +395,7 @@ void moveTilesUp() {
                 animationPos[i][j].jDest=-1;
                 xd=0;
                 glLoadIdentity();
-                gluOrtho2D(0,400,400,0);
+                gluOrtho2D(0,SIZE*100,SIZE*100,0);
                 generateNewTile();
                 // counter=1;
             }
@@ -365,6 +421,7 @@ void moveTilesUp() {
                     animationPos[k][j].iCurrentCoords=k*100;
                     animationPos[k][j].sourceValue=grid[k][j];
                     animationPos[k][j].destValue=grid[k][j]*2;
+                    scoreHandler(grid[k][j]);
                     grid[k][j]=0;
                     mergePosition++;
                     break;
@@ -407,7 +464,7 @@ void moveTilesDown() {
                 animationPos[i][j].jDest=-1;
                 xd=0;
                 glLoadIdentity();
-                gluOrtho2D(0,400,400,0);
+                gluOrtho2D(0,SIZE*100,SIZE*100,0);
                 generateNewTile();
                 // counter=1;
             }
@@ -433,6 +490,7 @@ void moveTilesDown() {
                     animationPos[k][j].iCurrentCoords=k*100;
                     animationPos[k][j].sourceValue=grid[k][j];
                     animationPos[k][j].destValue=grid[k][j]*2;
+                    scoreHandler(grid[k][j]);
                     grid[k][j]=0;
                     mergePosition--;
                     break;
@@ -472,7 +530,7 @@ void renderGridAndTiles() {
     int counter = 0;
     glPushMatrix();
     glLoadIdentity();
-    gluOrtho2D(0,400,400,0);
+    gluOrtho2D(0,SIZE*100,SIZE*100,0);
     glColor3f(0.7, 0.7, 0.7); // kolor linii
     glLineWidth(3.0); // grubosc linii
     // zaczecie rysowania linii
@@ -506,7 +564,7 @@ void renderGridAndTiles() {
             else {
                 glPushMatrix();
                 glLoadIdentity();
-                gluOrtho2D(0, 400, 400, 0);
+                gluOrtho2D(0,SIZE*100,SIZE*100,0);
                 drawTile(x,y,tileSize,value,valueArray);
                 glPopMatrix();
             }
@@ -531,13 +589,13 @@ void renderGridAndTiles() {
             if(isEmpty) {
                 if(counter) {
                     generateNewTile();
-                    updateEmptySpaces();
+                    //updateEmptySpaces();
                     //printf("%d ",emptySpaces);
                     //showValue();
                     counter=0;
                 }
                 glLoadIdentity();
-                gluOrtho2D(0, 400, 400, 0);
+                gluOrtho2D(0,SIZE*100,SIZE*100,0);
                 xd=0;
                 yd=0;
             }
@@ -659,16 +717,75 @@ int checkWin() {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     renderGridAndTiles();
-    if(checkGameOver()) {
-        printf("przegrales!");
-        exit(0);
-    }
+    updateEmptySpaces();
+
     if(checkWin()) {
         printf("wygrales!");
         exit(0);
     }
+    if(checkGameOver()) {
+        printf("przegrales!");
+        exit(0);
+    }
     glutSwapBuffers();
 }
+
+void scoreHandler(int mergedValue) {
+    static int score = 0;
+    score+=mergedValue;
+    printf("Wynik: %d\n",score);
+}
+
+void display2() {
+    texture = LoadTexture("kupa2.bmp");
+    //glBindTexture(GL_TEXTURE_2D, texture);
+   
+    glBegin (GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
+    glTexCoord2d(1.0, 0.0); glVertex2d(400.0, 0.0);
+    glTexCoord2d(1.0, 1.0); glVertex2d(400.0, 400);
+    glTexCoord2d(0.0, 1.0); glVertex2d(0.0, 400.0);
+    glEnd();
+
+    texture = LoadTexture("start.bmp");
+
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
+    // Start 
+   // glBindTexture(GL_TEXTURE_2D, texture);
+    glTexCoord2d(0.0, 0.0); glVertex2d(150, 200);
+    glTexCoord2d(1.0, 0.0); glVertex2d(250, 200);
+    glTexCoord2d(1.0, 1.0); glVertex2d(250, 230);
+    glTexCoord2d(0.0, 1.0); glVertex2d(150, 230);
+    glEnd();
+
+    texture = LoadTexture("credits.bmp");
+
+    // credits
+    glBegin(GL_QUADS);
+    //glBindTexture(GL_TEXTURE_2D, texture);
+    glTexCoord2d(0.0, 0.0); glVertex2d(150, 250);
+    glTexCoord2d(1.0, 0.0); glVertex2d(250, 250);
+    glTexCoord2d(1.0, 1.0); glVertex2d(250, 280);
+    glTexCoord2d(0.0, 1.0); glVertex2d(150, 280);
+    glEnd();
+
+    texture = LoadTexture("quit.bmp");
+
+    // quit
+    glBegin(GL_QUADS);
+    //glBindTexture(GL_TEXTURE_2D, texture);
+    glTexCoord2d(0.0, 0.0); glVertex2d(150, 300);
+    glTexCoord2d(1.0, 0.0); glVertex2d(250, 300);
+    glTexCoord2d(1.0, 1.0); glVertex2d(250, 330);
+    glTexCoord2d(0.0, 1.0); glVertex2d(150, 330);
+    glEnd();
+
+    //glutPostRedisplay();
+    glutSwapBuffers();
+}
+
+//int id=1;
 
 void handleKeyPress(int key, int x, int y) {
     switch (key) {
@@ -684,6 +801,72 @@ void handleKeyPress(int key, int x, int y) {
         case GLUT_KEY_DOWN:
             moveTilesDown();
             break;
+        case GLUT_KEY_F2:
+            glutDestroyWindow(glutGetWindow());
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+            glutInitWindowSize(400, 400);
+            glutCreateWindow("2048");
+            gluOrtho2D(0,400,400,0);
+            glEnable( GL_TEXTURE_2D );
+            glutDisplayFunc(display2);
+            glutMouseFunc(mouse);
+            //id+=1;
+            break;
+    }
+}
+
+// debilo-odporna funkcja
+void resetGrid() {
+    for(int i=0;i<SIZE;i++){
+        for(int j=0;j<SIZE;j++) {
+            grid[i][j] = 0;
+        }
+    }
+}
+
+void mouse(int button, int state, int x, int y) {
+    static int d = 0;
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        // start
+        if (x >= 150 && x <= 250 && y >= 200 && y <= 230) {
+            glutDestroyWindow(glutGetWindow());
+            // glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+            // glutInitWindowSize(400, 400);
+            // glutCreateWindow("2048");
+            // glutDisplayFunc(display);
+            // glutSpecialFunc(handleKeyPress);
+            // resetGrid();
+            srand(time(NULL)); // generowanie seedu
+            resetanimationPos();
+            initializeGrid(); // inicjalizacja siatki gry
+            glDisable(GL_TEXTURE_2D);
+            glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+            glutInitWindowSize(400, 400);
+            glutCreateWindow("2048");
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluOrtho2D(0,SIZE*100,SIZE*100,0); // ustawienie obszaru ortogonalnego
+            glutDisplayFunc(display);
+            glutIdleFunc(display);
+            glutReportErrors();
+            glutSpecialFunc(handleKeyPress);
+            //glutFullScreen();
+            if(!d){
+                glutTimerFunc(0,timer,0);
+                d=1;
+            }
+            playBackgroundMusic("music//DS.wav");
+            //id+=1;
+            printf("Start");
+        }
+        // credits
+        else if (x >= 150 && x <= 250 && y >= 250 && y <= 280) {
+            printf("credits");
+        }
+        // quit
+        else if (x >= 150 && x <= 250 && y >= 300 && y <= 330) { 
+            exit(0);
+        }
     }
 }
 
@@ -704,26 +887,38 @@ void timer() {
     }
 }
 
-void playBackgroundMusic() {
-    PlaySound(TEXT("music//DS.wav"), NULL, SND_ASYNC | SND_LOOP);
+void playBackgroundMusic(const char* filePath) {
+    PlaySound(filePath, NULL, SND_ASYNC | SND_LOOP);
 }
 
 int main(int argc, char** argv) {
-    srand(time(NULL)); // generowanie seedu
-    resetanimationPos();
-    initializeGrid(); // inicjalizacja siatki gry
+    playBackgroundMusic("music//menu.wav");
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(400, 400);
     glutCreateWindow("2048");
+    gluOrtho2D(0,400,400,0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, 400, 400, 0); // ustawienie obszaru ortogonalnego
-    glutDisplayFunc(display);
-    glutReportErrors();
-    glutSpecialFunc(handleKeyPress);
-    glutTimerFunc(0,timer,0);
-    playBackgroundMusic();
+    glEnable( GL_TEXTURE_2D );
+    glutDisplayFunc(display2);
+    glutIdleFunc(display2);
+    glutMouseFunc(mouse);
+    // srand(time(NULL)); // generowanie seedu
+    // resetanimationPos();
+    // initializeGrid(); // inicjalizacja siatki gry
+    // glutInit(&argc, argv);
+    // glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    // glutInitWindowSize(400, 400);
+    // glutCreateWindow("2048");
+    // glMatrixMode(GL_PROJECTION);
+    // glLoadIdentity();
+    // gluOrtho2D(0,SIZE*100,SIZE*100,0); // ustawienie obszaru ortogonalnego
+    // glutDisplayFunc(display);
+    // glutReportErrors();
+    // glutSpecialFunc(handleKeyPress);
+    // glutTimerFunc(0,timer,0);
+    // playBackgroundMusic();
     glutMainLoop();
     return 0;
 }
