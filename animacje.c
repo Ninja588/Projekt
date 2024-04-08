@@ -217,21 +217,26 @@ void drawTile(int x, int y, int tileSize, int value, int valueArray[])
 
 void generateNewTile() {
     int value = rand() % 3 == 0 ? 4 : 2;
-    if (emptySpaces > 0) {
-        int randomIndex = rand() % emptySpaces;
-        int count = 0;
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j] == 0) {
-                    if (count == randomIndex) {
-                        grid[i][j] = value;
-                        return;
-                    }
-                    count++;
-                }
+    int temp[SIZE*SIZE][2];
+    int count = 0;
+
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (grid[i][j] == 0) {
+                temp[count][0] = i;
+                temp[count][1] = j;
+                count++;
             }
         }
     }
+
+    if (count == 0) return;
+
+    int randomIndex = rand() % count;
+    int randomI = temp[randomIndex][0];
+    int randomJ = temp[randomIndex][1];
+
+    grid[randomI][randomJ] = value;
 }
 
 void initializeGrid() {
@@ -737,7 +742,7 @@ void scoreHandler(int mergedValue) {
 }
 
 void display2() {
-    texture = LoadTexture("kupa2.bmp");
+    texture = LoadTexture("image.bmp");
     //glBindTexture(GL_TEXTURE_2D, texture);
    
     glBegin (GL_QUADS);
@@ -815,7 +820,6 @@ void handleKeyPress(int key, int x, int y) {
     }
 }
 
-// debilo-odporna funkcja
 void resetGrid() {
     for(int i=0;i<SIZE;i++){
         for(int j=0;j<SIZE;j++) {
