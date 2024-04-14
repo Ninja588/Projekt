@@ -13,6 +13,7 @@
 #include <mmsystem.h>
 #include <stdbool.h>
 #include <windows.h>
+#include <GL/freeglut.h>
 
 #define SIZE 4 // rozmiar siatki
 #define SPEED 25*(SIZE/4) // szybkosc blokow
@@ -153,42 +154,42 @@ void drawTile(int x, int y, int tileSize, int value, int valueArray[])
                     break;
                 case 16:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
                     glColor3f(0.0, 1.0, 1.0);
                     break;
                 case 32:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
                     glColor3f(1.0, 1.0, 1.0);
                     break;
                 case 64:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.4 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
                     glColor3f(0.3, 0.6, 1.0);
                     break;
                 case 128:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
                     glColor3f(1.0, 0.0, 1.0);
                     break;
                 case 256:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
                     glColor3f(1.0, 0.4, 0.5);
                     break;
                 case 512:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
                     glColor3f(0.0, 1.0, 0.5);
                     break;
                 case 1024:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.25 * tileSize, y + 0.55 * tileSize);
                     glColor3f(0.5, 0.4, 0.0);
                     break;
                 case 2048:
                     glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+                    glRasterPos2f(x + 0.25 * tileSize, y + 0.55 * tileSize);
                     glColor3f(0.0, 0.5, 0.5);
                     break;
             }
@@ -288,7 +289,7 @@ void moveTilesLeft() {
                 animationPos[i][j].jDest=-1;
                 yd=0;
                 glLoadIdentity();
-                gluOrtho2D(-148,1772,938,-148);
+                gluOrtho2D(-148,1772,932,-148);
                 generateNewTile();
                 // counter=1;
             }
@@ -358,7 +359,7 @@ void moveTilesRight() {
                 animationPos[i][j].jDest=-1;
                 yd=0;
                 glLoadIdentity();
-                gluOrtho2D(-148,1772,938,-148);
+                gluOrtho2D(-148,1772,932,-148);
                 generateNewTile();
                 // counter=1;
             }
@@ -427,7 +428,7 @@ void moveTilesUp() {
                 animationPos[i][j].jDest=-1;
                 xd=0;
                 glLoadIdentity();
-                gluOrtho2D(-148,1772,938,-148);
+                gluOrtho2D(-148,1772,932,-148);
                 generateNewTile();
                 // counter=1;
             }
@@ -496,7 +497,7 @@ void moveTilesDown() {
                 animationPos[i][j].jDest=-1;
                 xd=0;
                 glLoadIdentity();
-                gluOrtho2D(-148,1772,938,-148);
+                gluOrtho2D(-148,1772,932,-148);
                 generateNewTile();
                 // counter=1;
             }
@@ -556,28 +557,44 @@ void moveTilesDown() {
 
 void renderGridAndTiles() {
     // int temp = 0;
+    static bool isBackgroundLoaded = false;
     int valueArray[4]; // tablica przechowywujaca wartosc tilesa do wypisania na nim
-    int gridSize = SIZE; // rozmiar siatki (4x4)
+    //int gridSize = SIZE; // rozmiar siatki (4x4)
     int tileSize = 100; // rozmiar tile (100x100 px)
     int counter = 0;
     glPushMatrix();
     glLoadIdentity();
-    gluOrtho2D(-148,1772,938,-148);
-    glColor3f(0.7, 0.7, 0.7); // kolor linii
+    //glEnable(GL_TEXTURE_2D);
+    gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
+    if(!isBackgroundLoaded) {
+        texture = LoadTexture("testBack1.bmp");
+        isBackgroundLoaded=true;
+    }
+    glColor3f(1, 1, 1);
+    glBegin (GL_QUADS);
+    glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
+    glTexCoord2d(1.0, 0.0); glVertex2d(Settings.resolutionWidth, 0.0);
+    glTexCoord2d(1.0, 1.0); glVertex2d(Settings.resolutionWidth, Settings.resolutionHeight);
+    glTexCoord2d(0.0, 1.0); glVertex2d(0.0, Settings.resolutionHeight);
+    glEnd();
+
+    glLoadIdentity();
+    gluOrtho2D(-148,1772,932,-148);
+    glColor3f(0, 0, 0); // kolor linii
     glLineWidth(3.0); // grubosc linii
     // zaczecie rysowania linii
     glBegin(GL_LINES);
-    for (int i = 0; i <= gridSize; i++) {
+    for (int i = 0; i <= SIZE; i++) {
         glVertex2f(0, i * tileSize);
-        glVertex2f(gridSize * tileSize, i * tileSize);
+        glVertex2f(SIZE * tileSize, i * tileSize);
         glVertex2f(i * tileSize, 0);
-        glVertex2f(i * tileSize, gridSize * tileSize);
+        glVertex2f(i * tileSize, SIZE * tileSize);
     }
     glEnd();
     glPopMatrix();
 
-    for (int i = 0; i < gridSize; i++) {
-        for (int j = 0; j < gridSize; j++) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
             int value = grid[i][j];
             bool isEmpty = true;
             float x = j * tileSize;
@@ -596,7 +613,7 @@ void renderGridAndTiles() {
             else {
                 glPushMatrix();
                 glLoadIdentity();
-                gluOrtho2D(-148,1772,938,-148);
+                gluOrtho2D(-148,1772,932,-148);
                 drawTile(x,y,tileSize,value,valueArray);
                 glPopMatrix();
             }
@@ -627,10 +644,27 @@ void renderGridAndTiles() {
                     counter=0;
                 }
                 glLoadIdentity();
-                gluOrtho2D(-148,1772,938,-148);
+                gluOrtho2D(-148,1772,932,-148);
                 xd=0;
                 yd=0;
             }
+            glPushMatrix();
+            glLoadIdentity();
+            gluOrtho2D(-148,1772,932,-148);
+            glColor3f(0, 0, 0); // kolor linii
+            glLineWidth(5.0); // grubosc linii
+            // zaczecie rysowania linii
+            glBegin(GL_LINES);
+                glVertex2f(0, 0);
+                glVertex2f(0, SIZE*tileSize);
+                glVertex2f(0, SIZE*tileSize);
+                glVertex2f(SIZE*tileSize, SIZE*tileSize);
+                glVertex2f(SIZE*tileSize, SIZE*tileSize);
+                glVertex2f(SIZE*tileSize, 0);
+                glVertex2f(SIZE*tileSize, 0);
+                glVertex2f(0, 0);
+            glEnd();
+            glPopMatrix();
             // switch(value) {
             //     case 0:
             //         glColor3f(0.7, 0.7, 0.7);
@@ -773,7 +807,7 @@ void scoreHandler(int mergedValue) {
 
 void display2() {
     glClear(GL_COLOR_BUFFER_BIT);
-    texture = LoadTexture("template.bmp");
+    texture = LoadTexture("image.bmp");
     //glBindTexture(GL_TEXTURE_2D, texture);
    
     glBegin (GL_QUADS);
@@ -783,7 +817,7 @@ void display2() {
     glTexCoord2d(0.0, 1.0); glVertex2d(0.0, Settings.resolutionHeight);
     glEnd();
 
-    texture = LoadTexture("MenuBack.bmp");
+    texture = LoadTexture("quit.bmp");
 
     glColor3f(1.0, 1.0, 1.0);
     glBegin(GL_QUADS);
@@ -799,7 +833,7 @@ void display2() {
     // glTexCoord2d(0.0, 1.0); glVertex2d(150, 230);
     glEnd();
 
-    texture = LoadTexture("MenuBack.bmp");
+    texture = LoadTexture("credits.bmp");
 
     // Credits/Settings
     glBegin(GL_QUADS);
@@ -810,7 +844,7 @@ void display2() {
     glTexCoord2d(0.0, 1.0); glVertex2d(((Settings.resolutionWidth)/2)-(Settings.resolutionWidth)/10, ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-(Settings.resolutionHeight/10)-(Settings.resolutionWidth/40)));
     glEnd();
 
-    texture = LoadTexture("MenuBack.bmp");
+    texture = LoadTexture("start.bmp");
 
     // Start
     glBegin(GL_QUADS);
@@ -865,7 +899,7 @@ void mouse(int button, int state, int x, int y) {
                     && y <= ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-2*(Settings.resolutionHeight/10)-2*(Settings.resolutionWidth/40))) {
                 isGameStarted = true;
                 srand(time(NULL));
-                glDisable(GL_TEXTURE_2D);
+                //glDisable(GL_TEXTURE_2D);
                 resetanimationPos();
                 initializeGrid();
                 glMatrixMode(GL_MODELVIEW);
@@ -877,7 +911,7 @@ void mouse(int button, int state, int x, int y) {
                     d=1;
                 }
                 glutPostRedisplay();
-                playBackgroundMusic("music//AS.wav");
+                //playBackgroundMusic("music//DS.wav");
                 printf("Start");
             }
             // credits
@@ -925,9 +959,9 @@ int main(int argc, char** argv) {
     Settings.resolutionHeight = glutGet(GLUT_SCREEN_HEIGHT);
     printf("%d %d",Settings.resolutionWidth,Settings.resolutionHeight);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(1920, 1080);
+    glutInitWindowSize(Settings.resolutionWidth,Settings.resolutionHeight);
     glutCreateWindow("2048");
-    gluOrtho2D(0,1920,1080,0);
+    gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glEnable( GL_TEXTURE_2D );
