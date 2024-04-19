@@ -362,6 +362,7 @@ void moveTilesLeft() {
             }
         }
     }
+    yd=0;
     xd=-SPEED;
     glutPostRedisplay();
 }
@@ -431,6 +432,7 @@ void moveTilesRight() {
             }
         }
     }
+    yd=0;
     xd=SPEED;
     glutPostRedisplay();
 }
@@ -500,6 +502,7 @@ void moveTilesUp() {
             }
         }
     }
+    xd=0;
     yd=-SPEED;
     glutPostRedisplay();
 }
@@ -569,6 +572,7 @@ void moveTilesDown() {
             }
         }
     }
+    xd=0;
     yd=SPEED;
     glutPostRedisplay();
 }
