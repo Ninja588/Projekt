@@ -13,7 +13,7 @@
 #include <mmsystem.h>
 #include <stdbool.h>
 #include <string.h>
-#include <GL/freeglut.h>
+//#include <GL/freeglut.h>
 
 #define SIZE 4 // rozmiar siatki
 #define SPEED 25*(SIZE/2) // szybkosc blokow
@@ -29,7 +29,7 @@ FILE *file;
 
 bool isGameStarted;
 bool isInMenu;
-bool m;
+//bool m;
 
 unsigned int resolutionChoice;
 
@@ -268,6 +268,8 @@ void generateNewTile() {
     int randomIndex = rand()%counter;    
 
     grid[ tempTab[randomIndex].iCoord ][ tempTab[randomIndex].jCoord ] = value;
+    static int d = 0;
+    printf("%d - Generowanie\n",d++);
     // if (emptySpaces > 0) {
     //     int randomIndex = rand() % emptySpaces;
     //     int count = 0;
@@ -297,6 +299,7 @@ void initializeGrid() {
 }
 
 void moveTilesLeft() {
+    int d=0;
     for(int i=0;i<SIZE;i++) {
         for(int j=0;j<SIZE;j++) {
             if(animationPos[i][j].iDest!=-1) {
@@ -308,7 +311,11 @@ void moveTilesLeft() {
                 yd=0;
                 glLoadIdentity();
                 gluOrtho2D(-140,1780,940,-140);
-                generateNewTile();
+                if(!d) {
+                    generateNewTile();
+                    d=1;
+                }
+                //generateNewTile();
                 // counter=1;
             }
         }
@@ -368,6 +375,7 @@ void moveTilesLeft() {
 }
 
 void moveTilesRight() {
+    int d=0;
     for(int i=0;i<SIZE;i++) {
         for(int j=0;j<SIZE;j++) {
             if(animationPos[i][j].iDest!=-1) {
@@ -379,7 +387,11 @@ void moveTilesRight() {
                 yd=0;
                 glLoadIdentity();
                 gluOrtho2D(-140,1780,940,-140);
-                generateNewTile();
+                if(!d) {
+                    generateNewTile();
+                    d=1;
+                }
+                //generateNewTile();
                 // counter=1;
             }
         }
@@ -438,6 +450,7 @@ void moveTilesRight() {
 }
 
 void moveTilesUp() {
+    int d=0;
     for(int i=0;i<SIZE;i++) {
         for(int j=0;j<SIZE;j++) {
             if(animationPos[i][j].iDest!=-1) {
@@ -449,7 +462,11 @@ void moveTilesUp() {
                 xd=0;
                 glLoadIdentity();
                 gluOrtho2D(-140,1780,940,-140);
-                generateNewTile();
+                if(!d) {
+                    generateNewTile();
+                    d=1;
+                }
+                //generateNewTile();
                 // counter=1;
             }
         }
@@ -508,6 +525,7 @@ void moveTilesUp() {
 }
 
 void moveTilesDown() {
+    int d=0;
     for(int i=0;i<SIZE;i++) {
         for(int j=0;j<SIZE;j++) {
             if(animationPos[i][j].iDest!=-1) {
@@ -519,7 +537,11 @@ void moveTilesDown() {
                 xd=0;
                 glLoadIdentity();
                 gluOrtho2D(-140,1780,940,-140);
-                generateNewTile();
+                if(!d) {
+                    generateNewTile();
+                    d=1;
+                }
+                
                 // counter=1;
             }
         }
@@ -929,7 +951,7 @@ void display2() {
     glTexCoord2d(0.0, 1.0); glVertex2d(((Settings.resolutionWidth)/2)-(Settings.resolutionWidth)/10, ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-2*(Settings.resolutionHeight/10)-2*(Settings.resolutionWidth/40)));
     glEnd();
 
-    glutPostRedisplay();
+    //glutPostRedisplay();
     glutSwapBuffers();
 }
 
@@ -970,7 +992,7 @@ void display3() {
     strcat(temp,"x");
     strcat(temp,temp2);
     if(!resolutionChoice) strcat(temp," (native)");
-    
+
     drawBitmapString(temp,633.6/Settings.resolutionWidth,583.2/Settings.resolutionHeight);
 
     glutSwapBuffers();
@@ -993,7 +1015,6 @@ void handleKeyPress(int key, int x, int y) {
             case GLUT_KEY_DOWN:
                 moveTilesDown();
                 break;
-
         }
     }
 }
@@ -1009,6 +1030,7 @@ void resetGrid() {
 
 void mouseMenu(int button, int state, int x, int y) {
     // static int d = 0;
+    static bool m;
     //if(!isGameStarted && isInMenu) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         // start
@@ -1030,8 +1052,8 @@ void mouseMenu(int button, int state, int x, int y) {
                 glutTimerFunc(0,timer,0);
                 m=true;
             }
-            glutPostRedisplay();
-            //playBackgroundMusic("music//DS.wav");
+            //glutPostRedisplay();
+            playBackgroundMusic("music//DS.wav");
             printf("Start");
         }
         // credits
@@ -1043,7 +1065,7 @@ void mouseMenu(int button, int state, int x, int y) {
             isInMenu = false;
             glMatrixMode(GL_MODELVIEW);
             printf("settings");
-            glutPostRedisplay();
+            //glutPostRedisplay();
         }
         // quit
         else if (x >= ((Settings.resolutionWidth)/2)-(Settings.resolutionWidth)/10 && x <= ((Settings.resolutionWidth)/2)+(Settings.resolutionWidth)/10 
@@ -1105,6 +1127,7 @@ void mouseGame(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         if(x>=Settings.resolutionWidth*0.833 && x<=Settings.resolutionWidth*0.931 
         && y>=Settings.resolutionHeight*0.755 && y<=Settings.resolutionHeight*0.846) {
+            playBackgroundMusic("music//menu.wav");
             glLoadIdentity();
             gluOrtho2D(0, Settings.resolutionWidth, Settings.resolutionHeight, 0);
             glEnable(GL_TEXTURE_2D);
@@ -1144,7 +1167,7 @@ void playBackgroundMusic(const char* filePath) {
 }
 
 int main(int argc, char** argv) {
-    //playBackgroundMusic("music//menu.wav");
+    playBackgroundMusic("music//menu.wav");
     isGameStarted = false;
     isInMenu = true;
     
@@ -1179,7 +1202,7 @@ int main(int argc, char** argv) {
     glutFullScreen();
     gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+   // glLoadIdentity();
     glEnable( GL_TEXTURE_2D );
     glutDisplayFunc(display2);
     //glutIdleFunc(display2);
