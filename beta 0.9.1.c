@@ -605,6 +605,7 @@ void drawBitmapString(char *text, float offsetWidth, float offsetHeight) {
     glLoadIdentity();
     gluOrtho2D(0,Settings.resolutionWidth, Settings.resolutionHeight, 0);
     glScaled((Settings.resolutionHeight/3086.0),-(Settings.resolutionHeight/3086.0),1.0);
+    glLineWidth(2.0);
     glColor3f(1.0, 1.0, 1.0);
     //glRasterPos2f(Settings.resolutionWidth*offsetWidth,Settings.resolutionHeight*offsetHeight);
     glTranslated(Settings.resolutionWidth*offsetWidth,-Settings.resolutionHeight*offsetHeight,0);
