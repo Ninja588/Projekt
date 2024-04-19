@@ -20,6 +20,8 @@
 
 int grid[SIZE][SIZE]; // siatka
 
+int score = 0;
+
 int emptySpaces,xd,yd; // puste miejsca (tiles z wartoscia '0')
 
 bool isGameStarted;
@@ -27,7 +29,7 @@ bool isGameStarted;
 void mouse();
 void timer();
 void playBackgroundMusic();
-void scoreHandler();
+void scoreHandler(int mergedValue);
 
 struct tilePos {
     int iDest;
@@ -555,6 +557,28 @@ void moveTilesDown() {
     glutPostRedisplay();
 }
 
+void drawScore(int score) {
+    int temp =0;
+    int valueArray[10];
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0,Settings.resolutionWidth, Settings.resolutionHeight, 0);
+    glColor3f(1.0, 1.0, 1.0);
+    glRasterPos2f(Settings.resolutionWidth*0.76,Settings.resolutionHeight*0.407);//(1135, 310);
+    if (score != 0) {
+        while(score != 0) {
+            valueArray[temp] = score%10;
+            temp++;
+            score/=10;
+        }
+        for(int i=temp-1;i>=0;i--) {
+            glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, valueArray[i] + '0');
+        }
+        temp = 0;
+    } else glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0');
+    glPopMatrix();
+}
+
 void renderGridAndTiles() {
     // int temp = 0;
     static bool isBackgroundLoaded = false;
@@ -564,10 +588,10 @@ void renderGridAndTiles() {
     int counter = 0;
     glPushMatrix();
     glLoadIdentity();
-    //glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_2D);
     gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
     if(!isBackgroundLoaded) {
-        texture = LoadTexture("testBack1.bmp");
+        texture = LoadTexture("testGameBack2.bmp");
         isBackgroundLoaded=true;
     }
     glColor3f(1, 1, 1);
@@ -577,7 +601,8 @@ void renderGridAndTiles() {
     glTexCoord2d(1.0, 1.0); glVertex2d(Settings.resolutionWidth, Settings.resolutionHeight);
     glTexCoord2d(0.0, 1.0); glVertex2d(0.0, Settings.resolutionHeight);
     glEnd();
-
+    glDisable(GL_TEXTURE_2D);
+ 
     glLoadIdentity();
     gluOrtho2D(-148,1772,932,-148);
     glColor3f(0, 0, 0); // kolor linii
@@ -665,6 +690,7 @@ void renderGridAndTiles() {
                 glVertex2f(0, 0);
             glEnd();
             glPopMatrix();
+            drawScore(score);
             // switch(value) {
             //     case 0:
             //         glColor3f(0.7, 0.7, 0.7);
@@ -797,9 +823,9 @@ void display() {
 }
 
 void scoreHandler(int mergedValue) {
-    static int score = 0;
+    //static int score = 0;
     if(isGameStarted) {
-        score+=mergedValue;
+        score+=mergedValue*2;
         printf("Wynik: %d\n",score);
     }
     else score = 0;

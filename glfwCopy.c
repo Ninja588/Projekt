@@ -506,28 +506,28 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, 1);
-    if(glfwGetKey(window,GLFW_KEY_D) == GLFW_PRESS)
+    if(glfwGetKey(window,GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window,GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
         glLoadIdentity();
         moveTilesRight();
         Sleep(100);
     }
-    if(glfwGetKey(window,GLFW_KEY_A) == GLFW_PRESS)
+    if(glfwGetKey(window,GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window,GLFW_KEY_LEFT) == GLFW_PRESS)
     {
         glLoadIdentity();
         moveTilesLeft();
         Sleep(100);
     }
-    if(glfwGetKey(window,GLFW_KEY_W) == GLFW_PRESS)
-    {
-        glLoadIdentity();
-        moveTilesDown();
-        Sleep(100);
-    }
-    if(glfwGetKey(window,GLFW_KEY_S) == GLFW_PRESS)
+    if(glfwGetKey(window,GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window,GLFW_KEY_DOWN) == GLFW_PRESS)
     {
         glLoadIdentity();
         moveTilesUp();
+        Sleep(100);
+    }
+    if(glfwGetKey(window,GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window,GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        glLoadIdentity();
+        moveTilesDown();
         Sleep(100);
     }
 
@@ -569,7 +569,7 @@ void processInput(GLFWwindow *window)
  * Funkcja odtwarza muzykę z pliku o nazwie DS.wav
  */
 void playBackgroundMusic() {
-    //PlaySound(TEXT("music//DS.wav"), NULL, SND_ASYNC | SND_LOOP);
+    PlaySound(TEXT("music//DS.wav"), NULL, SND_ASYNC | SND_LOOP);
 }
 
 /**
@@ -605,6 +605,7 @@ int main(int argc, char** argv) {
     // glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     // glutInitWindowSize(400, 400);
     // glutCreateWindow("2048");
+    //playBackgroundMusic();
     while (!glfwWindowShouldClose(window)) {
         //initializeGrid(); // inicjalizacja siatki gry
         glMatrixMode(GL_PROJECTION);

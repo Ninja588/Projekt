@@ -28,6 +28,7 @@ FILE *file;
 
 bool isGameStarted;
 bool isInMenu;
+bool isBackgroundLoaded = false;
 
 void mouseGame(int button, int state, int x, int y);
 void mouseSettings(int button, int state, int x, int y);
@@ -296,13 +297,15 @@ void moveTilesLeft() {
                 animationPos[i][j].iDest=-1;
                 animationPos[i][j].jDest=-1;
                 yd=0;
-                glLoadIdentity();
-                gluOrtho2D(-140,1780,940,-140);
+                // glLoadIdentity();
+                // gluOrtho2D(-140,1780,940,-140);
                 generateNewTile();
                 // counter=1;
             }
         }
     }
+    glLoadIdentity();
+    gluOrtho2D(-140,1780,940,-140);
     for (int i = 0; i < SIZE; i++) {
         // int lastMerged = -1;
         int mergePosition = 0;
@@ -366,13 +369,15 @@ void moveTilesRight() {
                 animationPos[i][j].iDest=-1;
                 animationPos[i][j].jDest=-1;
                 yd=0;
-                glLoadIdentity();
-                gluOrtho2D(-140,1780,940,-140);
+                // glLoadIdentity();
+                // gluOrtho2D(-140,1780,940,-140);
                 generateNewTile();
                 // counter=1;
             }
         }
     }
+    glLoadIdentity();
+    gluOrtho2D(-140,1780,940,-140);
     for (int i = 0; i < SIZE; i++) {
         int mergePosition = SIZE-1;
         // od lewej do prawej
@@ -435,13 +440,15 @@ void moveTilesUp() {
                 animationPos[i][j].iDest=-1;
                 animationPos[i][j].jDest=-1;
                 xd=0;
-                glLoadIdentity();
-                gluOrtho2D(-140,1780,940,-140);
+                // glLoadIdentity();
+                // gluOrtho2D(-140,1780,940,-140);
                 generateNewTile();
                 // counter=1;
             }
         }
     }
+    glLoadIdentity();
+    gluOrtho2D(-140,1780,940,-140);
     for (int j = 0; j < SIZE; j++) {
         int mergePosition = 0;
         // od lewej do prawej
@@ -504,13 +511,15 @@ void moveTilesDown() {
                 animationPos[i][j].iDest=-1;
                 animationPos[i][j].jDest=-1;
                 xd=0;
-                glLoadIdentity();
-                gluOrtho2D(-140,1780,940,-140);
+                // glLoadIdentity();
+                // gluOrtho2D(-140,1780,940,-140);
                 generateNewTile();
                 // counter=1;
             }
         }
     }
+    glLoadIdentity();
+    gluOrtho2D(-140,1780,940,-140);
     for (int j = 0; j < SIZE; j++) {
         int mergePosition = SIZE-1;
         // od lewej do prawej
@@ -598,7 +607,7 @@ void drawScore(unsigned int score, unsigned int highscoreInt) {
     else glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0');
     glPopMatrix();
 }
-bool isBackgroundLoaded = false;
+
 void renderGridAndTiles() {
     // int temp = 0;
     //static bool isBackgroundLoaded = false;
@@ -861,6 +870,11 @@ void scoreHandler(int mergedValue) {
 
 void display2() {
     glClear(GL_COLOR_BUFFER_BIT);
+    // glPushMatrix();
+    // glLoadIdentity();
+    // glMatrixMode(GL_MODELVIEW);
+    // //glEnable(GL_TEXTURE_2D);
+    // gluOrtho2D(0, Settings.resolutionWidth, Settings.resolutionHeight, 0);
     texture = LoadTexture("image.bmp");
     //glBindTexture(GL_TEXTURE_2D, texture);
    
@@ -870,7 +884,7 @@ void display2() {
     glTexCoord2d(1.0, 1.0); glVertex2d(Settings.resolutionWidth, Settings.resolutionHeight);
     glTexCoord2d(0.0, 1.0); glVertex2d(0.0, Settings.resolutionHeight);
     glEnd();
-
+    
     texture = LoadTexture("quitButton.bmp");
 
     glColor3f(1.0, 1.0, 1.0);
@@ -908,8 +922,13 @@ void display2() {
     glTexCoord2d(1.0, 1.0); glVertex2d(((Settings.resolutionWidth)/2)+(Settings.resolutionWidth)/10, ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-2*(Settings.resolutionHeight/10)-2*(Settings.resolutionWidth/40)));
     glTexCoord2d(0.0, 1.0); glVertex2d(((Settings.resolutionWidth)/2)-(Settings.resolutionWidth)/10, ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-2*(Settings.resolutionHeight/10)-2*(Settings.resolutionWidth/40)));
     glEnd();
-
-    //glutPostRedisplay();
+    // glPopMatrix();
+    // static bool w=false;
+    // if(!w) {
+    //     glutPostRedisplay();
+    //     w=true;
+    // }
+    
     glutSwapBuffers();
 }
 
@@ -943,6 +962,7 @@ void display3() {
 //int id=1;
 
 void handleKeyPress(int key, int x, int y) {
+    static bool key1 = false;
     if(isGameStarted) {
         switch (key) {
             case GLUT_KEY_LEFT:
@@ -953,11 +973,11 @@ void handleKeyPress(int key, int x, int y) {
                 break;
             case GLUT_KEY_UP:
                 moveTilesUp();
+                key1 = true;
                 break;
             case GLUT_KEY_DOWN:
                 moveTilesDown();
                 break;
-
         }
     }
 }
@@ -970,6 +990,7 @@ void resetGrid() {
         }
     }
 }
+bool m;
 
 void mouseMenu(int button, int state, int x, int y) {
     static int d = 0;
@@ -980,6 +1001,7 @@ void mouseMenu(int button, int state, int x, int y) {
             && y >= ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-3*(Settings.resolutionHeight/10)-2*(Settings.resolutionWidth/40)) 
                 && y <= ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-2*(Settings.resolutionHeight/10)-2*(Settings.resolutionWidth/40))) {
             isGameStarted = true;
+            m=false;
             srand(time(NULL));
             //glDisable(GL_TEXTURE_2D);
             resetanimationPos();
@@ -989,9 +1011,9 @@ void mouseMenu(int button, int state, int x, int y) {
             glutReportErrors();
             glutSpecialFunc(handleKeyPress);
             glutMouseFunc(mouseGame);
-            if(!d){
+            if(!m){
                 glutTimerFunc(0,timer,0);
-                d=1;
+                m=true;
             }
             glutPostRedisplay();
             //playBackgroundMusic("music//DS.wav");
@@ -1023,6 +1045,7 @@ void mouseSettings(int button, int state, int x, int y) {
         if(x>=Settings.resolutionWidth*0.833 && x<=Settings.resolutionWidth*0.931 
         && y>=Settings.resolutionHeight*0.755 && y<=Settings.resolutionHeight*0.846) {
         glutDisplayFunc(display2);
+        glutMouseFunc(NULL);
         glutMouseFunc(mouseMenu);
         isInMenu = true;
         printf("settings");
@@ -1033,14 +1056,16 @@ void mouseSettings(int button, int state, int x, int y) {
 
 void mouseGame(int button, int state, int x, int y) {
     //if(isGameStarted) {
+        // back
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         if(x>=Settings.resolutionWidth*0.833 && x<=Settings.resolutionWidth*0.931 
         && y>=Settings.resolutionHeight*0.755 && y<=Settings.resolutionHeight*0.846) {
             glLoadIdentity();
             gluOrtho2D(0, Settings.resolutionWidth, Settings.resolutionHeight, 0);
             glEnable(GL_TEXTURE_2D);
-            glutDisplayFunc(display2);
             glutSpecialFunc(NULL);
+            glutDisplayFunc(display2);
+            glutMouseFunc(NULL);
             glutMouseFunc(mouseMenu);
             isInMenu = true;
             isGameStarted = false;
@@ -1052,19 +1077,21 @@ void mouseGame(int button, int state, int x, int y) {
 }
 
 void timer() {
-    glutPostRedisplay();
-    glutTimerFunc(1000/60,timer,0);
+    if(isGameStarted) {
+        glutPostRedisplay();
+        glutTimerFunc(1000/60,timer,0);
 
-    if(xd!=0 || yd!=0) {
-        for(int i=0;i<SIZE;i++) {
-            for(int j=0;j<SIZE;j++) {
-                if(animationPos[i][j].iDest!=-1) {
-                    animationPos[i][j].iCurrentCoords+=yd;
-                    animationPos[i][j].jCurrentCoords+=xd;
+        if(xd!=0 || yd!=0) {
+            for(int i=0;i<SIZE;i++) {
+                for(int j=0;j<SIZE;j++) {
+                    if(animationPos[i][j].iDest!=-1) {
+                        animationPos[i][j].iCurrentCoords+=yd;
+                        animationPos[i][j].jCurrentCoords+=xd;
+                    }
                 }
             }
+            glTranslated(xd,yd,0);
         }
-        glTranslated(xd,yd,0);
     }
 }
 
