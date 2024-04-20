@@ -993,7 +993,21 @@ void display3() {
     glClear(GL_COLOR_BUFFER_BIT);
     GLuint texture;
     static char temp[10], temp2[10];
-    texture = LoadTexture("textures/settings.bmp");
+    //texture = LoadTexture("textures/settings.bmp");
+
+    if(!Settings.fullscreen && !Settings.infiniteMode) {
+        texture = LoadTexture("textures/settingsf0I0.bmp");
+    }
+    if(!Settings.fullscreen && Settings.infiniteMode) {
+        texture = LoadTexture("textures/settingsf0I1.bmp");
+    }
+    if(Settings.fullscreen && !Settings.infiniteMode) {
+        texture = LoadTexture("textures/settingsf1I0.bmp");
+    }
+    if(Settings.fullscreen && Settings.infiniteMode) {
+        texture = LoadTexture("textures/settingsf1I1.bmp");
+    }
+
     glBegin (GL_QUADS);
     glTexCoord2d(0.0, 0.0); glVertex2d(0.0, 0.0);
     glTexCoord2d(1.0, 0.0); glVertex2d(Settings.resolutionWidth, 0.0);
@@ -1113,11 +1127,15 @@ void mouseMenu(int button, int state, int x, int y) {
 
 void mouseSettings(int button, int state, int x, int y) {
     static int choiceCheck = 0;
+    static bool fullscreenCheck = true;
+    static bool infiniteCheck = false;
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         // back do menu
         if(x>=Settings.resolutionWidth*0.833 && x<=Settings.resolutionWidth*0.931 
         && y>=Settings.resolutionHeight*0.755 && y<=Settings.resolutionHeight*0.846) {
             resolutionChoice=choiceCheck;
+            Settings.fullscreen = fullscreenCheck;
+            Settings.infiniteMode = infiniteCheck;
             glutDisplayFunc(display2);
             glutMouseFunc(mouseMenu);
             printf("settings");
@@ -1126,11 +1144,26 @@ void mouseSettings(int button, int state, int x, int y) {
         // Apply
         if(x>=Settings.resolutionWidth*0.069 && x<=Settings.resolutionWidth*0.167 
         && y>=Settings.resolutionHeight*0.755 && y<=Settings.resolutionHeight*0.846) {
-            if(resolutionChoice!=choiceCheck) {
+            if(resolutionChoice!=choiceCheck && !Settings.fullscreen) {
                 Settings.resolutionWidth=resolutions[resolutionChoice].width;
                 Settings.resolutionHeight=resolutions[resolutionChoice].height;
                 glutReshapeWindow(Settings.resolutionWidth, Settings.resolutionHeight);
                 choiceCheck=resolutionChoice;
+            }
+            if(Settings.fullscreen && Settings.fullscreen!=fullscreenCheck) {
+                glutFullScreen();
+                Settings.resolutionWidth = resolutions[0].width;
+                Settings.resolutionHeight = resolutions[0].height;
+                resolutionChoice = 0;
+                fullscreenCheck = Settings.fullscreen;
+            }
+            if(!Settings.fullscreen && Settings.fullscreen!=fullscreenCheck) {
+                glutInitWindowPosition(0,0);
+                glutReshapeWindow(Settings.resolutionWidth,Settings.resolutionHeight);
+                fullscreenCheck = Settings.fullscreen;
+            }
+            if(Settings.infiniteMode!=infiniteCheck) {
+                infiniteCheck = Settings.infiniteMode;
             }
             glLoadIdentity();
             gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
@@ -1138,16 +1171,40 @@ void mouseSettings(int button, int state, int x, int y) {
             glutMouseFunc(mouseMenu);
         }
 
+        // Res \/
         if(x>=Settings.resolutionWidth*0.0 && x<=Settings.resolutionWidth*0.2 
         && y>=Settings.resolutionHeight*0.0 && y<=Settings.resolutionHeight*0.2
         && resolutionChoice>=1) {
             resolutionChoice--;
         }
 
+        // Res /\'
         if(x>=Settings.resolutionWidth*0.8 && x<=Settings.resolutionWidth*1.0 
         && y>=Settings.resolutionHeight*0.0 && y<=Settings.resolutionHeight*0.2
         && resolutionChoice<=5) {
             resolutionChoice++;
+        }
+
+        // fullscreen toggle
+        if(x>=Settings.resolutionWidth*0.8 && x<=Settings.resolutionWidth*1.0 
+        && y>Settings.resolutionHeight*0.2 && y<=Settings.resolutionHeight*0.4) {
+            if(Settings.fullscreen) { Settings.fullscreen = false; }
+            else { Settings.fullscreen = true; }
+        }
+
+        // infinite
+        if(x>=Settings.resolutionWidth*0.8 && x<=Settings.resolutionWidth*1.0 
+        && y>Settings.resolutionHeight*0.4 && y<=Settings.resolutionHeight*0.6) {
+            if(Settings.infiniteMode) { Settings.infiniteMode = false; }
+            else { Settings.infiniteMode = true; }
+        }
+
+        // highscore reset
+        if(x>=Settings.resolutionWidth*0.0 && x<=Settings.resolutionWidth*0.2 
+        && y>Settings.resolutionHeight*0.2 && y<=Settings.resolutionHeight*0.4) {
+            fseek(file,0,SEEK_SET);
+            fprintf(file,"%s","                           ");
+            highscoreInt=0;
         }
     }
 }
@@ -1232,6 +1289,8 @@ int main(int argc, char** argv) {
     glutInitWindowSize(Settings.resolutionWidth,Settings.resolutionHeight);
     glutCreateWindow("2048");
     glutFullScreen();
+    Settings.fullscreen=true;
+    Settings.infiniteMode=false;
     gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
     glMatrixMode(GL_PROJECTION);
     glEnable( GL_TEXTURE_2D );
