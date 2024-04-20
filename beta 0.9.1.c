@@ -15,31 +15,114 @@
 #include <string.h>
 //#include <GL/freeglut.h>
 
+/**
+ * @brief Rozmiar siatki gry.
+ * Określa liczbę wierszy i kolumn w siatce gry.
+ * Wartość ta kontroluje wielkość siatki gry, która jest kwadratowa.
+ * Zwiększenie tej wartości zwiększy liczbę pól na siatce gry.
+ */
 #define SIZE 4 // rozmiar siatki
+/**
+ * @brief Szybkość poruszania sie bloków.
+ * Określa Szybkość poruszania sie bloków w grze.
+ * Zwiększenie tej wartości zwiększy szybkość poruszania się bloków.
+ */
 #define SPEED 25*(SIZE/2) // szybkosc blokow
-
+/**
+ * @brief Siatka gry.
+ * 
+ * Dwuwymiarowa tablica przechowująca stan gry.
+ * Wartości w siatce mogą być 0 (reprezentują puste miejsce) lub potęgi liczby 2 (2, 4, 8, 16, itd.).
+ */
 int grid[SIZE][SIZE]; // siatka
+/**
+ * @brief Liczba pustych miejsc na siatce gry.
+ * 
+ * Używane do kontroli, ile jeszcze miejsc na nowe klocki jest dostępnych.
+ */
+int emptySpaces; // puste miejsca (tiles z wartoscia '0')
 
-int emptySpaces,xd,yd; // puste miejsca (tiles z wartoscia '0')
+int xd,yd; 
+/**
+ * @brief Liczba określająca wielkość jednego bloku.
+ */
 int tileSize = 800/SIZE;
+/**
+ * @brief Zmienna przechowywująca aktualny wynik gracza.
+ */
 unsigned int score = 0;
+/**
+ * @brief Zmienna przechowywująca największy wynik gracza.
+ */
 unsigned int highscoreInt = 0;
-
+/**
+ * @brief Odwołanie się do pliku.
+ * 
+ * Używane jest do zczytywania wartości z pliku 'scoreboard.mp3'.
+ * Zczytana wartość to największy wynik gracza.
+ */
 FILE *file;
-
+/**
+ * @brief Zmienna sprawdzjąca, czy gra jest wystartowana.
+ */
 bool isGameStarted;
-bool isInMenu;
 //bool m;
-
+// TODO: dokonczyc to
+/**
+ * @brief Zmienna .
+ */
 unsigned int resolutionChoice;
-
+/**
+ * @brief Sprawdza położenie myszki na ekranie w grze po starcie gry.
+ * @param button Przycisk myszki.
+ * @param state Stan przycisku myszki (wciśnięty czy nie itp).
+ * @param x Pozycja x ekranu.
+ * @param y Pozycja y ekranu. 
+ * Funkcja sprawdza położenie myszki i jeśli jest na odpowiednich
+ * koordynatach oraz gracz kliknał LPM, to wtedy wywołuje się odpowiednia akcja, czyli
+ * powrót do menu gry.
+ */
 void mouseGame(int button, int state, int x, int y);
+/**
+ * @brief Sprawdza położenie myszki na ekranie w menu opcji.
+ * @param button Przycisk myszki.
+ * @param state Stan przycisku myszki (wciśnięty czy nie itp).
+ * @param x Pozycja x ekranu.
+ * @param y Pozycja y ekranu.
+ * Funkcja sprawdza położenie myszki i jeśli jest na odpowiednich
+ * koordynatach oraz gracz kliknał LPM, to wtedy wywołuje się odpowiednia akcja.
+ * Na przykład zmiana rozdzielczości, czy włączenie trybu Infinite.
+ */
 void mouseSettings(int button, int state, int x, int y);
-void mouse(int button, int state, int x, int y);
+/**
+ * @brief Sprawdza położenie myszki na ekranie w menu głównym.
+ * @param button Przycisk myszki.
+ * @param state Stan przycisku myszki (wciśnięty czy nie itp).
+ * @param x Pozycja x ekranu.
+ * @param y Pozycja y ekranu.
+ * Funkcja sprawdza położenie myszki i jeśli jest na odpowiednich
+ * koordynatach oraz gracz kliknał LPM, to wtedy wywołuje się odpowiednia akcja.
+ * Na przykład wejście do gry, menu opcji lub wyjście z gry.
+ */
+void mouseMenu(int button, int state, int x, int y);
+// TODO: dawid napisz to
+/**
+ * @brief 
+ * 
+ */
 void timer();
-void playBackgroundMusic();
+/**
+ * @brief Służy do odtwarzania muzyki w tle.
+ * @param filePath Ścieżka do pliku z muzyką.
+ */
+void playBackgroundMusic(const char* filePath);
+/**
+ * @brief Funkcja obliczająca aktualny wynik gry.
+ * @param mergedValue Wartość, która zostaje dodawana do wyniku.
+*/
 void scoreHandler(int mergedValue);
-
+// TODO: dawid napisz to
+/// @brief 
 struct tilePos {
     int iDest;
     int jDest;
@@ -49,7 +132,11 @@ struct tilePos {
     int destValue;
     int sourceValue;
 }animationPos[SIZE][SIZE];
-
+// TODO: dawid napisz to
+/**
+ * @brief Struktura odpowiadająca za zmiane ustawień gry.
+ * Potrafi zmienić rozdzielczość, włączyć lub wyłączyć tryb pełnoekranowy albo włączyć tryb Infinite. 
+ * */ 
 struct Options {
     int resolutionWidth;
     int resolutionHeight;
@@ -58,15 +145,20 @@ struct Options {
     bool infiniteMode;
     bool merge;
 }Settings;
-
+/// @brief Struktura przechowywująca możliwe rozdzielczości gry.
 struct resolution {
     int width;
     int height;
 }resolutions[7];
 
 
-GLuint texture;
-
+/// @brief Odwołanie się do tekstury.
+//GLuint texture;
+/**
+ * @brief Funkcja ładująca teksture.
+ * @param filename Ścieżka do pliku z teksturą.
+ * @return Zwracanie tekstury która się renderuje.
+ */
 GLuint LoadTexture(const char* filename) {
     GLuint texture;
     int width, height;
@@ -113,7 +205,11 @@ GLuint LoadTexture(const char* filename) {
 
     return texture;
 }
-
+// TODO: dawid napisz to
+/**
+ * @brief 
+ * 
+ */
 void resetanimationPos() {
     for(int i=0;i<SIZE;i++) {
         for(int j=0;j<SIZE;j++) {
@@ -124,7 +220,7 @@ void resetanimationPos() {
         }
     }
 }
-
+// do wyjebania i tak
 void showValue() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -133,7 +229,12 @@ void showValue() {
         }
     }
 }
-
+/**
+ * @brief Aktualizuje liczbę pustych miejsc na siatce.
+ * 
+ * Funkcja przelicza ilość pustych miejsc na siatce, czyli tile'ów z wartością '0',
+ * i zapisuje tę wartość w zmiennej globalnej emptySpaces.
+ */
 void updateEmptySpaces() {
     emptySpaces = 0;
     for (int i = 0; i < SIZE; i++) {
@@ -144,7 +245,13 @@ void updateEmptySpaces() {
         }
     }
 }
-
+/**
+ * @brief Funkcja rysująca płytki na ekranie.
+ * @param x Współrzędna x ekranu gdzie ma zacząć rysować.
+ * @param y Współrzędna y ekranu gdzie ma zacząć rysować.
+ * @param value Wartość płytki.
+ * @param valueArray Tablica przechowywująca liczby do wypisania na płytkach.
+ */
 void drawTile(int x, int y, int value, int valueArray[])
 {
     int temp=0;
@@ -245,11 +352,18 @@ void drawTile(int x, int y, int value, int valueArray[])
 //     drawTile(*x,*y,tileSize);
 // }
 
+// TODO: dawid napisz to
+/// @brief 
 struct tile {
     int iCoord;
     int jCoord;
 };
-
+/**
+ * @brief Generuje nowy tile w losowej pozycji na siatce 4x4 o wartości 2 lub 4.
+ * 
+ * Funkcja generuje nowy tile (o wartości 2 lub 4) na losowej pozycji na siatce, 
+ * jeśli są dostępne puste miejsca.
+ */
 void generateNewTile() {
     int value = rand() % 3 == 0 ? 4 : 2;
     struct tile tempTab[SIZE*SIZE];
@@ -268,8 +382,8 @@ void generateNewTile() {
     int randomIndex = rand()%counter;    
 
     grid[ tempTab[randomIndex].iCoord ][ tempTab[randomIndex].jCoord ] = value;
-    static int d = 0;
-    printf("%d - Generowanie\n",d++);
+    //static int d = 0;
+    //printf("%d - Generowanie\n",d++);
     // if (emptySpaces > 0) {
     //     int randomIndex = rand() % emptySpaces;
     //     int count = 0;
@@ -286,7 +400,12 @@ void generateNewTile() {
     //     }
     // }
 }
-
+/**
+ * @brief Inicjalizuje siatkę i generuje 2 początkowe tilesy.
+ * 
+ * Funkcja przygotowuje początkową siatkę gry ustawiając wszystkie wartości na '0',
+ * a następnie generuje dwa losowe tile'y na siatce.
+ */
 void initializeGrid() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -297,7 +416,12 @@ void initializeGrid() {
     generateNewTile();
     generateNewTile();
 }
-
+/**
+ * @brief Przesuwa tilesy w lewo.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy, w lewo na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesLeft() {
     int d=0;
     for(int i=0;i<SIZE;i++) {
@@ -373,7 +497,12 @@ void moveTilesLeft() {
     xd=-SPEED;
     glutPostRedisplay();
 }
-
+/**
+ * @brief Przesuwa tilesy w prawo.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w prawo na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesRight() {
     int d=0;
     for(int i=0;i<SIZE;i++) {
@@ -448,7 +577,12 @@ void moveTilesRight() {
     xd=SPEED;
     glutPostRedisplay();
 }
-
+/**
+ * @brief Przesuwa tilesy w górę.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w górę na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesUp() {
     int d=0;
     for(int i=0;i<SIZE;i++) {
@@ -523,7 +657,12 @@ void moveTilesUp() {
     yd=-SPEED;
     glutPostRedisplay();
 }
-
+/**
+ * @brief Przesuwa tilesy w dół.
+ * 
+ * Funkcja przesuwa wszystkie niepuste tilesy w dół na siatce, 
+ * łącząc te same wartości, jeśli to możliwe.
+ */
 void moveTilesDown() {
     int d=0;
     for(int i=0;i<SIZE;i++) {
@@ -599,6 +738,12 @@ void moveTilesDown() {
     glutPostRedisplay();
 }
 
+/**
+ * @brief Funkcja wypisująca tekst w typie 'int' na ekranie.
+ * @param text Wartość liczbowa, która ma zostać wypisana
+ * @param offsetWidth Wartość określająca pozycję w poziomie.
+ * @param offsetHeightWartość określająca pozycję w pionie.
+*/ 
 void drawBitmapInt(unsigned int text, float offsetWidth, float offsetHeight) {
     int temp = 0;
     int valueArray[10];
@@ -621,7 +766,12 @@ void drawBitmapInt(unsigned int text, float offsetWidth, float offsetHeight) {
     else glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0');
     glPopMatrix();
 }
-
+/**
+ * @brief Funkcja wypisująca tekst na ekranie.
+ * @param text Tekst który ma zostać wypisany.
+ * @param offsetWidth Wartość określająca pozycję w poziomie.
+ * @param offsetHeight Wartość określająca pozycję w pionie.
+*/
 void drawBitmapString(char *text, float offsetWidth, float offsetHeight) {
     glPushMatrix();
     glLoadIdentity();
@@ -638,7 +788,13 @@ void drawBitmapString(char *text, float offsetWidth, float offsetHeight) {
     glPopMatrix();
 }
 
+/// @brief Zmienna określająca czy tło w grze zostało załadowane.
 bool isBackgroundLoaded = false;
+/**
+ * @brief Renderuje siatkę i tilesy.
+ * Funkcja renderująca pole do gry, wczytująca tło
+ * oraz pokazująca wynik i najlepszy wynik.
+ */
 void renderGridAndTiles() {
     // int temp = 0;
     //static bool isBackgroundLoaded = false;
@@ -651,6 +807,7 @@ void renderGridAndTiles() {
     glEnable(GL_TEXTURE_2D);
     gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
     if(!isBackgroundLoaded) {
+        GLuint texture;
         texture = LoadTexture("textures/inGame.bmp");
         isBackgroundLoaded=true;
     }
@@ -830,7 +987,12 @@ void renderGridAndTiles() {
         }
     }
 }
-
+/**
+ * @brief Sprawdza, czy gracz przegrał.
+ * 
+ * Funkcja sprawdza, czy gracz przegrał, czyli czy nie ma możliwych ruchów na planszy.
+ * @return 1, jeśli gracz przegrał, w przeciwnym razie 0.
+ */
 int checkGameOver() {
     // sprawdzenie czy sa puste miejsca na planszy
     if (emptySpaces > 0)
@@ -857,7 +1019,12 @@ int checkGameOver() {
     // brak mozliwych ruchow, gracz przegral
     return 1;
 }
-
+/**
+ * @brief Sprawdza, czy gracz wygrał.
+ * 
+ * Funkcja sprawdza, czy gracz osiągnął wartość 2048 na jednym z tile'ów.
+ * @return 1, jeśli gracz wygrał, w przeciwnym razie 0.
+ */
 int checkWin() {
     // sprawdzenie każdego kafelka na planszy
     for (int i = 0; i < SIZE; i++) {
@@ -868,7 +1035,11 @@ int checkWin() {
     }
     return 0; // Gracz nie wygrał
 }
-
+/**
+ * @brief Funkcja wyświetlająca gre.
+ * 
+ * Funkcja wyświetla zawartość okna gry używając poprzednich funkcji.
+ */
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     
@@ -900,9 +1071,12 @@ void scoreHandler(int mergedValue) {
     }
     else score = 0; 
 }
-
+/**
+ * @brief Funkcja wyświetlająca menu gry.
+ */
 void display2() {
     glClear(GL_COLOR_BUFFER_BIT);
+    GLuint texture;
     texture = LoadTexture("textures/menu.bmp");
     //glBindTexture(GL_TEXTURE_2D, texture);
    
@@ -954,9 +1128,12 @@ void display2() {
     //glutPostRedisplay();
     glutSwapBuffers();
 }
-
+/**
+ * @brief Funkcja wyświetlająca menu opcji gry.
+ */
 void display3() {
     glClear(GL_COLOR_BUFFER_BIT);
+    GLuint texture;
     static char temp[10], temp2[10];
     texture = LoadTexture("textures/settings.bmp");
     //glBindTexture(GL_TEXTURE_2D, texture);
@@ -999,7 +1176,14 @@ void display3() {
 }
 
 //int id=1;
-
+/**
+ * @brief Obsługuje wciskanie przycisków z klawiatury.
+ * 
+ * Funkcja obsługuje wciśnięcia przycisków z klawiatury, przesuwając tilesy odpowiednio.
+ * @param key Wciśnięty klawisz.
+ * @param x Współrzędna x ekranu.
+ * @param y Współrzędna y ekranu.
+ */
 void handleKeyPress(int key, int x, int y) {
     if(isGameStarted) {
         switch (key) {
@@ -1031,7 +1215,7 @@ void resetGrid() {
 void mouseMenu(int button, int state, int x, int y) {
     // static int d = 0;
     static bool m;
-    //if(!isGameStarted && isInMenu) {
+    //if(!isGameStarted && //) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         // start
         if (x >= ((Settings.resolutionWidth)/2)-(Settings.resolutionWidth)/10 && x <= ((Settings.resolutionWidth)/2)+(Settings.resolutionWidth)/10 
@@ -1062,7 +1246,6 @@ void mouseMenu(int button, int state, int x, int y) {
         && y <= ((Settings.resolutionHeight)-(Settings.resolutionWidth/20)-(Settings.resolutionHeight/10)-(Settings.resolutionWidth/40))) {
             glutDisplayFunc(display3);
             glutMouseFunc(mouseSettings);
-            isInMenu = false;
             glMatrixMode(GL_MODELVIEW);
             printf("settings");
             //glutPostRedisplay();
@@ -1078,7 +1261,7 @@ void mouseMenu(int button, int state, int x, int y) {
 }
 
 void mouseSettings(int button, int state, int x, int y) {
-    //if(!isGameStarted && !isInMenu) {
+    //if(!isGameStarted && !//) {
     static int choiceCheck = 0;
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         // back do menu
@@ -1087,7 +1270,6 @@ void mouseSettings(int button, int state, int x, int y) {
             resolutionChoice=choiceCheck;
             glutDisplayFunc(display2);
             glutMouseFunc(mouseMenu);
-            isInMenu = true;
             printf("settings");
         }
 
@@ -1101,7 +1283,6 @@ void mouseSettings(int button, int state, int x, int y) {
                 choiceCheck=resolutionChoice;
                 // printf("\nSettings: %dx%d, resolutions: %dx%d, choice: %d, choiceCheck: %d", Settings.resolutionWidth, Settings.resolutionHeight, resolutions[resolutionChoice].width, resolutions[resolutionChoice].height, resolutionChoice, choiceCheck);
             }
-            isInMenu = true;
             glLoadIdentity();
             gluOrtho2D(0,Settings.resolutionWidth,Settings.resolutionHeight,0);
             glutDisplayFunc(display2);
@@ -1134,7 +1315,6 @@ void mouseGame(int button, int state, int x, int y) {
             glutDisplayFunc(display2);
             glutSpecialFunc(NULL);
             glutMouseFunc(mouseMenu);
-            isInMenu = true;
             isGameStarted = false;
             isBackgroundLoaded = false;
             score = 0;
@@ -1165,11 +1345,16 @@ void timer() {
 void playBackgroundMusic(const char* filePath) {
     PlaySound(filePath, NULL, SND_ASYNC | SND_LOOP);
 }
-
+/**
+ * @brief Funkcja główna programu.
+ * 
+ * Funkcja główna programu wczytująca okno GLUT oraz pętlę główną.
+ * Odpowiada za początkowe wejście do menu gry w trybie pełnoekranowym bazując na aktualnej rozdzielczości monitora.
+ * @return Wartość zwracana przez funkcję main().
+ */
 int main(int argc, char** argv) {
     playBackgroundMusic("music//menu.wav");
     isGameStarted = false;
-    isInMenu = true;
     
     file = fopen("scoreboard.mp3","r+");
     fscanf(file,"%u",&highscoreInt);
