@@ -1118,15 +1118,6 @@ void handleKeyPress(int key, int x, int y) {
     }
 }
 
-// debilo-odporna funkcja
-void resetGrid() {
-    for(int i=0;i<SIZE;i++){
-        for(int j=0;j<SIZE;j++) {
-            grid[i][j] = 0;
-        }
-    }
-}
-
 void mouseMenu(int button, int state, int x, int y) {
     static bool m;
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
