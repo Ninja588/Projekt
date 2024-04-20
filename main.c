@@ -44,8 +44,10 @@ int grid[SIZE][SIZE]; // siatka
  */
 int emptySpaces; // puste miejsca (tiles z wartoscia '0')
 
-/// @brief Parametr przesunięcia globalnego w macierzy transportu funkcji gltranslated.
-int xd,yd;
+/// @brief Parametr xd przesunięcia globalnego w macierzy transportu funkcji gltranslated.
+int xd;
+/// @brief Parametr yd przesunięcia globalnego w macierzy transportu funkcji gltranslated.
+int yd;
 
 /**
  * @brief Liczba określająca wielkość jednego bloku.
@@ -261,7 +263,7 @@ void updateEmptySpaces() {
 void drawTile(int x, int y, int value, int valueArray[])
 {
     int temp=0;
-    switch(value) {
+switch(value) {
                 default:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
@@ -275,57 +277,57 @@ void drawTile(int x, int y, int value, int valueArray[])
                 case 2:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.871,1.,1.);
+                    glColor3f(1.,1.,1.);
                     break;
                 case 4:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.0, 1.0, 0.0);
+                    glColor3f(0.725,0.929,0.98);
                     break;
                 case 8:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.45 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.0, 0.0, 1.0);
+                    glColor3f(0.004,0.918,0.98);
                     break;
                 case 16:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.0, 1.0, 1.0);
+                    glColor3f(0.176,0.58,0.89);
                     break;
                 case 32:
-                    glColor3f(0.0, 0.0, 0.0);
-                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
                     glColor3f(1.0, 1.0, 1.0);
+                    glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(0.067,0.204,0.98);
                     break;
                 case 64:
-                    glColor3f(0.0, 0.0, 0.0);
+                    glColor3f(1.0, 1.0, 1.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.3, 0.6, 1.0);
+                    glColor3f(0.086,0.,0.478);
                     break;
                 case 128:
-                    glColor3f(0.0, 0.0, 0.0);
+                    glColor3f(1.0, 1.0, 1.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(1.0, 0.0, 1.0);
+                    glColor3f(0.412,0.,0.878);
                     break;
                 case 256:
-                    glColor3f(0.0, 0.0, 0.0);
+                    glColor3f(1.0, 1.0, 1.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(1.0, 0.4, 0.5);
+                    glColor3f(0.475,0.224,0.482);
                     break;
                 case 512:
-                    glColor3f(0.0, 0.0, 0.0);
+                    glColor3f(1.0, 1.0, 1.0);
                     glRasterPos2f(x + 0.35 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.0, 1.0, 0.5);
+                    glColor3f(0.475,0.004,0.663);
                     break;
                 case 1024:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.5, 0.4, 0.0);
+                    glColor3f(0.929,0.,0.961);
                     break;
                 case 2048:
                     glColor3f(0.0, 0.0, 0.0);
                     glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
-                    glColor3f(0.0, 0.5, 0.5);
+                    glColor3f(0.922,0.,0.286);
                     break;
             }
             // zaczecie rysowania tilesow
@@ -910,6 +912,9 @@ int checkWin() {
     return 0; // Gracz nie wygrał
 }
 
+/**
+ * @brief Funkcja wyświetlająca ekran wygranej.
+ */
 void displayWin() {
     glEnable(GL_TEXTURE_2D);
     GLuint texture;
@@ -926,6 +931,9 @@ void displayWin() {
     glutSwapBuffers();
 }
 
+/**
+ * @brief Funkcja wyświetlająca ekran przegranej.
+ */
 void displayLose() {
     glEnable(GL_TEXTURE_2D);
     GLuint texture;
