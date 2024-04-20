@@ -260,6 +260,11 @@ void drawTile(int x, int y, int value, int valueArray[])
 {
     int temp=0;
     switch(value) {
+                default:
+                    glColor3f(0.0, 0.0, 0.0);
+                    glRasterPos2f(x + 0.3 * tileSize, y + 0.55 * tileSize);
+                    glColor3f(1.0,0.0,0.0);
+                    break;
                 case 0:
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                     glEnable( GL_BLEND );
@@ -1172,40 +1177,41 @@ void mouseSettings(int button, int state, int x, int y) {
         }
 
         // Res \/
-        if(x>=Settings.resolutionWidth*0.0 && x<=Settings.resolutionWidth*0.2 
-        && y>=Settings.resolutionHeight*0.0 && y<=Settings.resolutionHeight*0.2
+        if(x>=Settings.resolutionWidth*0.079 && x<=Settings.resolutionWidth*0.108 
+        && y>=Settings.resolutionHeight*0.139 && y<=Settings.resolutionHeight*0.204
         && resolutionChoice>=1) {
             resolutionChoice--;
         }
 
         // Res /\'
-        if(x>=Settings.resolutionWidth*0.8 && x<=Settings.resolutionWidth*1.0 
-        && y>=Settings.resolutionHeight*0.0 && y<=Settings.resolutionHeight*0.2
+        if(x>=Settings.resolutionWidth*0.3389 && x<=Settings.resolutionWidth*0.368
+        && y>=Settings.resolutionHeight*0.139 && y<=Settings.resolutionHeight*0.204
         && resolutionChoice<=5) {
             resolutionChoice++;
         }
 
         // fullscreen toggle
-        if(x>=Settings.resolutionWidth*0.8 && x<=Settings.resolutionWidth*1.0 
-        && y>Settings.resolutionHeight*0.2 && y<=Settings.resolutionHeight*0.4) {
+        if(x>=Settings.resolutionWidth*0.308 && x<=Settings.resolutionWidth*0.3448
+        && y>Settings.resolutionHeight*0.311 && y<=Settings.resolutionHeight*0.3763) {
             if(Settings.fullscreen) { Settings.fullscreen = false; }
             else { Settings.fullscreen = true; }
         }
 
         // infinite
-        if(x>=Settings.resolutionWidth*0.8 && x<=Settings.resolutionWidth*1.0 
-        && y>Settings.resolutionHeight*0.4 && y<=Settings.resolutionHeight*0.6) {
+        if(x>=Settings.resolutionWidth*0.308 && x<=Settings.resolutionWidth*0.3448 
+        && y>Settings.resolutionHeight*0.484 && y<=Settings.resolutionHeight*0.5494) {
             if(Settings.infiniteMode) { Settings.infiniteMode = false; }
             else { Settings.infiniteMode = true; }
         }
 
         // highscore reset
-        if(x>=Settings.resolutionWidth*0.0 && x<=Settings.resolutionWidth*0.2 
-        && y>Settings.resolutionHeight*0.2 && y<=Settings.resolutionHeight*0.4) {
+        if(x>=Settings.resolutionWidth*0.63 && x<=Settings.resolutionWidth*0.9209 
+        && y>Settings.resolutionHeight*0.484 && y<=Settings.resolutionHeight*0.552) {
             fseek(file,0,SEEK_SET);
             fprintf(file,"%s","                           ");
             highscoreInt=0;
         }
+        //printf("x: %d, y: %d\n", x, y);
     }
 }
 
