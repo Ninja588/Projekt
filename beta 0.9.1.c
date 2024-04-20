@@ -21,12 +21,14 @@
  * Zwiększenie tej wartości zwiększy liczbę pól na siatce gry.
  */
 #define SIZE 4 // rozmiar siatki
+
 /**
  * @brief Szybkość poruszania sie bloków.
  * Określa Szybkość poruszania sie bloków w grze.
  * Zwiększenie tej wartości zwiększy szybkość poruszania się bloków.
  */
-#define SPEED 50//25*(SIZE/2) // szybkosc blokow
+#define SPEED 50 // szybkosc blokow
+
 /**
  * @brief Siatka gry.
  * 
@@ -34,26 +36,32 @@
  * Wartości w siatce mogą być 0 (reprezentują puste miejsce) lub potęgi liczby 2 (2, 4, 8, 16, itd.).
  */
 int grid[SIZE][SIZE]; // siatka
+
 /**
  * @brief Liczba pustych miejsc na siatce gry.
  * 
  * Używane do kontroli, ile jeszcze miejsc na nowe klocki jest dostępnych.
  */
 int emptySpaces; // puste miejsca (tiles z wartoscia '0')
+// TODO: dawid napisz to
+/// @brief 
+int xd,yd;
 
-int xd,yd; 
 /**
  * @brief Liczba określająca wielkość jednego bloku.
  */
 int tileSize = 800/SIZE;
+
 /**
  * @brief Zmienna przechowywująca aktualny wynik gracza.
  */
 unsigned int score = 0;
+
 /**
  * @brief Zmienna przechowywująca największy wynik gracza.
  */
 unsigned int highscoreInt = 0;
+
 /**
  * @brief Odwołanie się do pliku.
  * 
@@ -65,12 +73,14 @@ FILE *file;
  * @brief Zmienna sprawdzjąca, czy gra jest wystartowana.
  */
 bool isGameStarted;
+
 //bool m;
 // TODO: dokonczyc to
 /**
  * @brief Zmienna .
  */
 unsigned int resolutionChoice;
+
 /**
  * @brief Sprawdza położenie myszki na ekranie w grze po starcie gry.
  * @param button Przycisk myszki.
@@ -82,6 +92,7 @@ unsigned int resolutionChoice;
  * powrót do menu gry.
  */
 void mouseGame(int button, int state, int x, int y);
+
 /**
  * @brief Sprawdza położenie myszki na ekranie w menu opcji.
  * @param button Przycisk myszki.
@@ -93,6 +104,7 @@ void mouseGame(int button, int state, int x, int y);
  * Na przykład zmiana rozdzielczości, czy włączenie trybu Infinite.
  */
 void mouseSettings(int button, int state, int x, int y);
+
 /**
  * @brief Sprawdza położenie myszki na ekranie w menu głównym.
  * @param button Przycisk myszki.
@@ -104,17 +116,20 @@ void mouseSettings(int button, int state, int x, int y);
  * Na przykład wejście do gry, menu opcji lub wyjście z gry.
  */
 void mouseMenu(int button, int state, int x, int y);
+
 // TODO: dawid napisz to
 /**
  * @brief 
  * 
  */
 void timer();
+
 /**
  * @brief Służy do odtwarzania muzyki w tle.
  * @param filePath Ścieżka do pliku z muzyką.
  */
 void playBackgroundMusic(const char* filePath);
+
 /**
  * @brief Funkcja obliczająca aktualny wynik gry.
  * @param mergedValue Wartość, która zostaje dodawana do wyniku.
@@ -131,19 +146,20 @@ struct tilePos {
     int destValue;
     int sourceValue;
 }animationPos[SIZE][SIZE];
-// TODO: dawid napisz to
+
 /**
  * @brief Struktura odpowiadająca za zmiane ustawień gry.
- * Potrafi zmienić rozdzielczość, włączyć lub wyłączyć tryb pełnoekranowy albo włączyć tryb Infinite. 
+ * Potrafi zmienić rozdzielczość, włączyć lub wyłączyć tryb pełnoekranowy, włączyć tryb Infinite,
+ * zmienić rozmiar siatki. 
  * */ 
 struct Options {
     int resolutionWidth;
     int resolutionHeight;
     bool fullscreen;
-    int size;
+    const int size;
     bool infiniteMode;
-    bool merge;
 }Settings;
+
 /// @brief Struktura przechowywująca możliwe rozdzielczości gry.
 struct resolution {
     int width;
@@ -898,7 +914,7 @@ void display() {
     renderGridAndTiles();
     updateEmptySpaces();
 
-    if(checkWin()) {
+    if(checkWin() && !Settings.infiniteMode) {
         printf("wygrales!");
         exit(0);
     }
@@ -987,7 +1003,7 @@ void display3() {
 
     texture = LoadTexture("textures/backButton.bmp");
 
-    // Credits/Settings
+    // back
     glBegin(GL_QUADS);
     glTexCoord2d(0.0, 0.0); glVertex2d(Settings.resolutionWidth*0.833, Settings.resolutionHeight*0.755);
     glTexCoord2d(1.0, 0.0); glVertex2d(Settings.resolutionWidth*0.931, Settings.resolutionHeight*0.755);
@@ -995,6 +1011,8 @@ void display3() {
     glTexCoord2d(0.0, 1.0); glVertex2d(Settings.resolutionWidth*0.833, Settings.resolutionHeight*0.846);
     glEnd();
 
+    texture = LoadTexture("textures/applyButton.bmp");
+    // apply
     glBegin(GL_QUADS);
     glTexCoord2d(0.0, 0.0); glVertex2d(Settings.resolutionWidth*0.069, Settings.resolutionHeight*0.755);
     glTexCoord2d(1.0, 0.0); glVertex2d(Settings.resolutionWidth*0.167, Settings.resolutionHeight*0.755);
@@ -1180,7 +1198,6 @@ void playBackgroundMusic(const char* filePath) {
  * 
  * Funkcja główna programu wczytująca okno GLUT oraz pętlę główną.
  * Odpowiada za początkowe wejście do menu gry w trybie pełnoekranowym bazując na aktualnej rozdzielczości monitora.
- * @return Wartość zwracana przez funkcję main().
  */
 int main(int argc, char** argv) {
     //playBackgroundMusic("music//menu.wav");
