@@ -1,3 +1,8 @@
+/**
+ * @file consts.h
+ * @brief Plik nagłówkowy ze stałymi potrzebnymi do funkcji.
+ * 
+ */
 #ifndef CONSTS_H
 #define CONSTS_H
 

@@ -1,3 +1,8 @@
+/**
+ * @file score.h
+ * @brief Plik nagłówkowy zawierający funkcje odpowiedzialną za obsługiwanie wyniku gry.
+ * 
+ */
 #ifndef SCORE_H
 #define SCORE_H
 

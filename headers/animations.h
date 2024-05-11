@@ -1,3 +1,8 @@
+/**
+ * @file animations.h
+ * @brief Plik nagłówkowy zawierający funkcje odpowiedzialne za animacje.
+ * 
+ */
 #ifndef ANIMATIONS_H
 #define ANIMATIONS_H
 

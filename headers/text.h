@@ -1,3 +1,8 @@
+/**
+ * @file text.h
+ * @brief Plik nagłówkowy zawierający funkcje odpowiedzialne za wypisywanie tekstu.
+ * 
+ */
 #ifndef TEXT_H
 #define TEXT_H
 
