@@ -7,7 +7,7 @@ struct tile {
 };
 
 void generateNewTile() {
-    int value = rand() % 3 == 0 ? 4 : 2;
+    int value = rand() % 3 == 0 ? 2 : 4;
     struct tile tempTab[SIZE*SIZE];
     int counter=0;
     for(int i=0;i<SIZE;i++) {
@@ -23,7 +23,7 @@ void generateNewTile() {
         return;
     int randomIndex = rand()%counter;    
 
-    grid[ tempTab[randomIndex].iCoord ][ tempTab[randomIndex].jCoord ] = value;
+    grid[tempTab[randomIndex].iCoord][tempTab[randomIndex].jCoord] = value;
 }
 
 void resetanimationPos() {
